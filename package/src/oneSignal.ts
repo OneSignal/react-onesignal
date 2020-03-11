@@ -1,3 +1,5 @@
+import { IOneSignal } from "./oneSignal.types";
+
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
 const DEFAULT_MODULE_SCRIPT_ID = 'react-onesignal-module';
@@ -80,10 +82,40 @@ const initialize = (appId: string) => {
 };
 
 /**
+ * Sets the email on OneSignal instance.
+ * @param email email
+ */
+const setEmail = (email: string) => {
+  const OneSignal: IOneSignal = window['OneSignal'];
+
+  if (OneSignal) {
+    return OneSignal?.setEmail(email);
+  }
+
+  return null;
+}
+
+/**
+ * Gets the email ID configured on OneSignal instance.
+ * @param email email
+ */
+const getEmailId = () => {
+  const OneSignal: IOneSignal = window['OneSignal'];
+
+  if (OneSignal) {
+    return OneSignal?.getEmailId();
+  }
+
+  return null;
+}
+
+/**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
   initialize,
+  setEmail,
+  getEmailId,
 };
 
 export default ReactOneSignal;

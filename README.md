@@ -33,6 +33,12 @@ Simply initialize OneSignal with your token:
 import OneSignal from 'react-onesignal';
 
 OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+
+// Set email to track & notify specific users
+OneSignal.setEmail('my_email@example.com');
+
+// Check which email is configured in this browser
+const emailId = await OneSignal.getEmailId();
 ```
 
 ## Contributing
