@@ -124,6 +124,11 @@ const setEmail = (email: string) => getOneSignalInstance()?.setEmail(email);
 const getEmailId = () => getOneSignalInstance()?.getEmailId();
 
 /**
+ * Returns the Player ID from this browser.
+ */
+const getPlayerId = () => getOneSignalInstance()?.getUserId();
+
+/**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
@@ -133,6 +138,7 @@ const ReactOneSignal = {
   registerForPushNotifications,
   setEmail,
   getEmailId,
+  getPlayerId,
 };
 
 export default ReactOneSignal;

@@ -4,4 +4,5 @@ export interface IOneSignal {
   getNotificationPermission: () => Promise<string>,
   setEmail: (email: string) => Promise<string>,
   getEmailId: () => Promise<string>,
+  getUserId: () => Promise<string>,
 }

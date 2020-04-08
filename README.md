@@ -37,6 +37,16 @@ OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 
 ## Advanced Usage
 
+## Player ID
+
+Player ID is an important information on OneSignal.
+
+You can use `getPlayerId` to obtain it.
+
+```js
+const playerId = await OneSignal.getPlayerId();
+```
+
 ### Notification Permission Management
 
 To manage notifications:
