@@ -29,11 +29,17 @@ npm install --save react-onesignal
 
 Simply initialize OneSignal with your token:
 
-```
+```js
 import OneSignal from 'react-onesignal';
 
 OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+```
 
+### User Email Tracking
+
+You can use `setEmail` and `getEmailId` to track user email.
+
+```js
 // Set email to track & notify specific users
 OneSignal.setEmail('my_email@example.com');
 
