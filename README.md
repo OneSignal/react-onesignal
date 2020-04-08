@@ -35,6 +35,8 @@ import OneSignal from 'react-onesignal';
 OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 ```
 
+## Advanced Usage
+
 ### Notification Permission Management
 
 To manage notifications:
