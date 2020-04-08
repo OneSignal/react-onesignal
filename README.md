@@ -44,6 +44,7 @@ Player ID is an important information on OneSignal.
 You can use `getPlayerId` to obtain it.
 
 ```js
+// Obtains the current playerId from the browser
 const playerId = await OneSignal.getPlayerId();
 ```
 
