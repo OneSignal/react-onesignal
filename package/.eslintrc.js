@@ -40,6 +40,9 @@ module.exports = {
   rules: {
     "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
     "react/jsx-props-no-spreading": 0,
+    "prefer-destructuring": 0,
+    "no-param-reassign": 0,
     "import/extensions": 0,
+    "dot-notation": 0,
   },
 };

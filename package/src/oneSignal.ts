@@ -1,4 +1,5 @@
-import { IOneSignal } from "./oneSignal.types";
+// eslint-disable-next-line no-unused-vars
+import { IOneSignal } from './oneSignal.types';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -26,7 +27,10 @@ const getModuleScriptBody = (appId: string) => `
  * @param id script id.
  * @param buildScript script factory.
  */
-const injectScript = (id: string, buildScript: (script: HTMLScriptElement) => HTMLScriptElement) => {
+const injectScript = (
+  id: string,
+  buildScript: (script: HTMLScriptElement) => HTMLScriptElement,
+) => {
   const hasScript = !!document.getElementById(id);
 
   if (hasScript) {
@@ -40,7 +44,7 @@ const injectScript = (id: string, buildScript: (script: HTMLScriptElement) => HT
   script = buildScript(script);
 
   document.body.appendChild(script);
-}
+};
 
 /**
  * Injects the base script for OneSignal
@@ -93,7 +97,7 @@ const setEmail = (email: string) => {
   }
 
   return null;
-}
+};
 
 /**
  * Gets the email ID configured on OneSignal instance.
@@ -107,7 +111,7 @@ const getEmailId = () => {
   }
 
   return null;
-}
+};
 
 /**
  * Object for manipulating OneSignal.
