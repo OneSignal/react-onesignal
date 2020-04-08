@@ -23,6 +23,15 @@ const getModuleScriptBody = (appId: string) => `
 `;
 
 /**
+ * Gets the window OneSignal instance.
+ */
+const getOneSignalInstance = () => {
+  const OneSignal: IOneSignal = window['OneSignal'];
+
+  return OneSignal;
+};
+
+/**
  * Injects one script into the DOM.
  * @param id script id.
  * @param buildScript script factory.
@@ -86,38 +95,42 @@ const initialize = (appId: string) => {
 };
 
 /**
+ * Array with every possible notification permission state.
+ */
+const notificationPermission = () => getOneSignalInstance()?.notificationPermission;
+
+/**
+ * Gets the current notification permission state.
+ */
+const getNotificationPermission = () => getOneSignalInstance()?.getNotificationPermission();
+
+/**
+ * Attempt to register for push notifications.
+ * If the user hasn't authorized push notifications yet,
+ * this will show a prompt to do so.
+ */
+const registerForPushNotifications = () => getOneSignalInstance()?.registerForPushNotifications();
+
+/**
  * Sets the email on OneSignal instance.
  * @param email email
  */
-const setEmail = (email: string) => {
-  const OneSignal: IOneSignal = window['OneSignal'];
-
-  if (OneSignal) {
-    return OneSignal?.setEmail(email);
-  }
-
-  return null;
-};
+const setEmail = (email: string) => getOneSignalInstance()?.setEmail(email);
 
 /**
  * Gets the email ID configured on OneSignal instance.
  * @param email email
  */
-const getEmailId = () => {
-  const OneSignal: IOneSignal = window['OneSignal'];
-
-  if (OneSignal) {
-    return OneSignal?.getEmailId();
-  }
-
-  return null;
-};
+const getEmailId = () => getOneSignalInstance()?.getEmailId();
 
 /**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
   initialize,
+  notificationPermission,
+  getNotificationPermission,
+  registerForPushNotifications,
   setEmail,
   getEmailId,
 };

@@ -35,6 +35,25 @@ import OneSignal from 'react-onesignal';
 OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 ```
 
+### Notification Permission Management
+
+To manage notifications:
+
+- Use `notificationPermission` to see all possible states.
+- Use `getNotificationPermission` to check current notification permissions.
+- Use `registerForPushNotifications` to ask for notification permissions.
+
+```js
+// Check all possible permission states
+const permissions = OneSignal.notificationPermission;
+
+// Check current permission state
+const currentState = await OneSignal.getNotificationPermission();
+
+// Ask the user for notification permissions, if not granted yet
+await OneSignal.registerForPushNotifications();
+```
+
 ### User Email Tracking
 
 You can use `setEmail` and `getEmailId` to track user email.
