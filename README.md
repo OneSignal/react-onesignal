@@ -37,7 +37,7 @@ OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 
 ## Advanced Usage
 
-## Player ID
+### Player ID
 
 Player ID is an important information on OneSignal.
 
