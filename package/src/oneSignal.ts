@@ -114,7 +114,7 @@ const notificationPermission = () => {
 /**
  * Gets the current notification permission state.
  */
-const getNotificationPermission = () => new Promise<any>((resolve, reject) => {
+const getNotificationPermission = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
@@ -157,7 +157,7 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
  * Sets the email on OneSignal instance.
  * @param email email
  */
-const setEmail = (email: string) => new Promise<any>((resolve, reject) => {
+const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
@@ -178,7 +178,7 @@ const setEmail = (email: string) => new Promise<any>((resolve, reject) => {
  * Gets the email ID configured on OneSignal instance.
  * @param email email
  */
-const getEmailId = () => new Promise<any>((resolve, reject) => {
+const getEmailId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
@@ -198,7 +198,7 @@ const getEmailId = () => new Promise<any>((resolve, reject) => {
 /**
  * Returns the Player ID from this browser.
  */
-const getPlayerId = () => new Promise<any>((resolve, reject) => {
+const getPlayerId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
