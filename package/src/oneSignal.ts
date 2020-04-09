@@ -28,7 +28,11 @@ const getModuleScriptBody = (appId: string) => `
 const getOneSignalInstance = () => {
   const OneSignal: IOneSignal = window['OneSignal'];
 
-  return OneSignal;
+  if (OneSignal?.initialized) {
+    return OneSignal;
+  }
+
+  return null;
 };
 
 /**
@@ -97,36 +101,84 @@ const initialize = (appId: string) => {
 /**
  * Array with every possible notification permission state.
  */
-const notificationPermission = () => getOneSignalInstance()?.notificationPermission;
+const notificationPermission = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.notificationPermission;
+};
 
 /**
  * Gets the current notification permission state.
  */
-const getNotificationPermission = () => getOneSignalInstance()?.getNotificationPermission();
+const getNotificationPermission = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.getNotificationPermission();
+};
 
 /**
  * Attempt to register for push notifications.
  * If the user hasn't authorized push notifications yet,
  * this will show a prompt to do so.
  */
-const registerForPushNotifications = () => getOneSignalInstance()?.registerForPushNotifications();
+const registerForPushNotifications = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.registerForPushNotifications();
+};
 
 /**
  * Sets the email on OneSignal instance.
  * @param email email
  */
-const setEmail = (email: string) => getOneSignalInstance()?.setEmail(email);
+const setEmail = (email: string) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.setEmail(email);
+};
 
 /**
  * Gets the email ID configured on OneSignal instance.
  * @param email email
  */
-const getEmailId = () => getOneSignalInstance()?.getEmailId();
+const getEmailId = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.getEmailId();
+};
 
 /**
  * Returns the Player ID from this browser.
  */
-const getPlayerId = () => getOneSignalInstance()?.getUserId();
+const getPlayerId = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.getUserId();
+};
 
 /**
  * Object for manipulating OneSignal.
