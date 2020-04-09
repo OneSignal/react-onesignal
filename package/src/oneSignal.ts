@@ -114,71 +114,71 @@ const notificationPermission = () => {
 /**
  * Gets the current notification permission state.
  */
-const getNotificationPermission = () => {
+const getNotificationPermission = () => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    return null;
+    reject();
+  } else {
+    resolve(oneSignal.getNotificationPermission);
   }
-
-  return oneSignal.getNotificationPermission();
-};
+});
 
 /**
  * Attempt to register for push notifications.
  * If the user hasn't authorized push notifications yet,
  * this will show a prompt to do so.
  */
-const registerForPushNotifications = () => {
+const registerForPushNotifications = () => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    return null;
+    reject();
+  } else {
+    resolve(oneSignal.registerForPushNotifications);
   }
-
-  return oneSignal.registerForPushNotifications();
-};
+});
 
 /**
  * Sets the email on OneSignal instance.
  * @param email email
  */
-const setEmail = (email: string) => {
+const setEmail = (email: string) => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    return null;
+    reject();
+  } else {
+    resolve(() => oneSignal.setEmail(email));
   }
-
-  return oneSignal.setEmail(email);
-};
+});
 
 /**
  * Gets the email ID configured on OneSignal instance.
  * @param email email
  */
-const getEmailId = () => {
+const getEmailId = () => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    return null;
+    reject();
+  } else {
+    resolve(oneSignal.getEmailId);
   }
-
-  return oneSignal.getEmailId();
-};
+});
 
 /**
  * Returns the Player ID from this browser.
  */
-const getPlayerId = () => {
+const getPlayerId = () => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    return null;
+    reject();
+  } else {
+    resolve(oneSignal.getUserId);
   }
-
-  return oneSignal.getUserId();
-};
+});
 
 /**
  * Object for manipulating OneSignal.
