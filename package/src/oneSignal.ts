@@ -13,13 +13,13 @@ const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
 /**
  * Provides the module script content to inject.
  */
-const getModuleScriptBody = (appId: string, isCustomCode: boolean) => `
+const getModuleScriptBody = (appId: string, showNotifyButton: boolean) => `
   var OneSignal = window.OneSignal || [];
   OneSignal.push(function() {
     OneSignal.init({
       appId: "${appId}",
       notifyButton: {
-        enable: ${isCustomCode},
+        enable: ${showNotifyButton},
       },
     });
   });
@@ -76,9 +76,9 @@ const injectBaseScript = () => {
 /**
  * Injects the module script for OneSignal
  */
-const injectModuleScript = (appId: string, isCustomCode: boolean) => {
+const injectModuleScript = (appId: string, showNotifyButton: boolean) => {
   injectScript(DEFAULT_MODULE_SCRIPT_ID, (script) => {
-    script.innerHTML = getModuleScriptBody(appId, isCustomCode);
+    script.innerHTML = getModuleScriptBody(appId, showNotifyButton);
     script.async = true;
 
     return script;
@@ -90,7 +90,7 @@ const injectModuleScript = (appId: string, isCustomCode: boolean) => {
  */
 const initialize = (
   appId: string,
-  isCustomCode: boolean = false,
+  showNotifyButton: boolean = false,
 ) => {
   if (!appId) {
     throw new Error('You need to provide your OneSignal appId.');
@@ -101,7 +101,7 @@ const initialize = (
   }
 
   injectBaseScript();
-  injectModuleScript(appId, isCustomCode);
+  injectModuleScript(appId, showNotifyButton);
 };
 
 /**
