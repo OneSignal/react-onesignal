@@ -119,8 +119,15 @@ const getNotificationPermission = () => new Promise<any>((resolve, reject) => {
 
   if (!oneSignal) {
     reject();
-  } else {
-    resolve(oneSignal.getNotificationPermission);
+    return;
+  }
+
+  try {
+    oneSignal.getNotificationPermission()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
   }
 });
 
@@ -134,8 +141,15 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
 
   if (!oneSignal) {
     reject();
-  } else {
-    resolve(oneSignal.registerForPushNotifications);
+    return;
+  }
+
+  try {
+    oneSignal.registerForPushNotifications()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
   }
 });
 
@@ -148,8 +162,15 @@ const setEmail = (email: string) => new Promise<any>((resolve, reject) => {
 
   if (!oneSignal) {
     reject();
-  } else {
-    resolve(() => oneSignal.setEmail(email));
+    return;
+  }
+
+  try {
+    oneSignal.setEmail(email)
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
   }
 });
 
@@ -162,8 +183,15 @@ const getEmailId = () => new Promise<any>((resolve, reject) => {
 
   if (!oneSignal) {
     reject();
-  } else {
-    resolve(oneSignal.getEmailId);
+    return;
+  }
+
+  try {
+    oneSignal.getEmailId()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
   }
 });
 
@@ -175,8 +203,15 @@ const getPlayerId = () => new Promise<any>((resolve, reject) => {
 
   if (!oneSignal) {
     reject();
-  } else {
-    resolve(oneSignal.getUserId);
+    return;
+  }
+
+  try {
+    oneSignal.getUserId()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
   }
 });
 
