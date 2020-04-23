@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { IOneSignal } from './oneSignal.types';
+import { IOneSignal, OneSignalOptions } from './oneSignal.types';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -11,19 +11,46 @@ const DEFAULT_MODULE_SCRIPT_ID = 'react-onesignal-module';
 const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
 
 /**
+ * Maps The Options Object Into A String For The Module Script
+ * @param o the options object
+ * @param indent 
+ */
+const mapOptionsObject = (o: any, indent: number = 0) => {
+  var out = '';
+  for (var p in o) {
+      if (o.hasOwnProperty(p)) {
+          var val = o[p];
+          out += new Array(4 * indent + 1).join(' ') + p + ': ';
+          if (typeof val === 'object') {
+            out += '{\n' + mapOptionsObject(val, indent + 1) + new Array(4 * indent + 1).join(' ') + '}';
+          } else if (typeof val === 'function') {
+
+          } else if (typeof val === 'boolean') {
+            out += val;
+          }
+          else {
+            out += '"' + val + '"';
+          }
+          out += ',\n';
+      }
+  }
+  return out;
+}
+
+/**
  * Provides the module script content to inject.
  */
-const getModuleScriptBody = (appId: string, showNotifyButton: boolean) => `
-  var OneSignal = window.OneSignal || [];
-  OneSignal.push(function() {
-    OneSignal.init({
-      appId: "${appId}",
-      notifyButton: {
-        enable: ${showNotifyButton},
-      },
+const getModuleScriptBody = (options: OneSignalOptions) => {
+  let mappedOptions = mapOptionsObject(options);
+  return `
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        ${mappedOptions}
+      });
     });
-  });
-`;
+  `
+};
 
 /**
  * Gets the window OneSignal instance.
@@ -76,9 +103,9 @@ const injectBaseScript = () => {
 /**
  * Injects the module script for OneSignal
  */
-const injectModuleScript = (appId: string, showNotifyButton: boolean) => {
+const injectModuleScript = (options: OneSignalOptions) => {
   injectScript(DEFAULT_MODULE_SCRIPT_ID, (script) => {
-    script.innerHTML = getModuleScriptBody(appId, showNotifyButton);
+    script.innerHTML = getModuleScriptBody(options);
     script.async = true;
 
     return script;
@@ -88,11 +115,8 @@ const injectModuleScript = (appId: string, showNotifyButton: boolean) => {
 /**
  * Initializes OneSignal.
  */
-const initialize = (
-  appId: string,
-  showNotifyButton: boolean = false,
-) => {
-  if (!appId) {
+const initialize = (options: OneSignalOptions) => {
+  if (!options.appId) {
     throw new Error('You need to provide your OneSignal appId.');
   }
 
@@ -101,7 +125,7 @@ const initialize = (
   }
 
   injectBaseScript();
-  injectModuleScript(appId, showNotifyButton);
+  injectModuleScript(options);
 };
 
 /**
