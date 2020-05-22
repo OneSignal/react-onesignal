@@ -40,12 +40,13 @@ const mapOptionsObject = (o: any, indent: number = 0) => {
 /**
  * Provides the module script content to inject.
  */
-const getModuleScriptBody = (options: OneSignalOptions) => {
+const getModuleScriptBody = (appId: string, options: OneSignalOptions) => {
   let mappedOptions = mapOptionsObject(options);
   return `
     var OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
       OneSignal.init({
+        appId: "${appId}",
         ${mappedOptions}
       });
     });
@@ -103,9 +104,9 @@ const injectBaseScript = () => {
 /**
  * Injects the module script for OneSignal
  */
-const injectModuleScript = (options: OneSignalOptions) => {
+const injectModuleScript = (appId: string, options: OneSignalOptions) => {
   injectScript(DEFAULT_MODULE_SCRIPT_ID, (script) => {
-    script.innerHTML = getModuleScriptBody(options);
+    script.innerHTML = getModuleScriptBody(appId, options);
     script.async = true;
 
     return script;
@@ -115,8 +116,8 @@ const injectModuleScript = (options: OneSignalOptions) => {
 /**
  * Initializes OneSignal.
  */
-const initialize = (options: OneSignalOptions) => {
-  if (!options.appId) {
+const initialize = (appId: string, options: OneSignalOptions) => {
+  if (!appId) {
     throw new Error('You need to provide your OneSignal appId.');
   }
 
@@ -125,7 +126,7 @@ const initialize = (options: OneSignalOptions) => {
   }
 
   injectBaseScript();
-  injectModuleScript(options);
+  injectModuleScript(appId, options);
 };
 
 /**

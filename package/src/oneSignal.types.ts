@@ -9,7 +9,6 @@ export interface IOneSignal {
 }
 
 export interface OneSignalOptions {
-  appId: string;
   subdomainName?: string;
   allowLocalhostAsSecureOrigin?: boolean;
   requiresUserPrivacyConsent?: boolean;
