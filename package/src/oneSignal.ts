@@ -232,7 +232,6 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
 
 /**
  * Gets the email ID configured on OneSignal instance.
- * @param email email
  */
 const getEmailId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
@@ -272,6 +271,49 @@ const getPlayerId = () => new Promise<string>((resolve, reject) => {
 });
 
 /**
+ * Sets the external user ID on OneSignal instance.
+ * @param externalUserId The external user ID
+ */
+const setExternalUserId = (
+  externalUserId: string | number,
+) => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.setExternalUserId(externalUserId)
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Gets the external user ID configured on OneSignal instance.
+ */
+const getExternalUserId = () => new Promise<string>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.getExternalUserId()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
@@ -282,6 +324,8 @@ const ReactOneSignal = {
   setEmail,
   getEmailId,
   getPlayerId,
+  setExternalUserId,
+  getExternalUserId,
 };
 
 export default ReactOneSignal;

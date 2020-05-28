@@ -5,6 +5,8 @@ export interface IOneSignal {
   setEmail: (email: string) => Promise<string>,
   getEmailId: () => Promise<string>,
   getUserId: () => Promise<string>,
+  setExternalUserId: (externalUserId: string | number) => Promise<void>,
+  getExternalUserId: () => Promise<any>,
   initialized: boolean,
 }
 
