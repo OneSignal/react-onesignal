@@ -32,7 +32,26 @@ Simply initialize OneSignal with your token:
 ```js
 import OneSignal from 'react-onesignal';
 
-OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', options);
+```
+
+Where options is:
+
+```js
+subdomainName?: string;
+allowLocalhostAsSecureOrigin?: boolean;
+requiresUserPrivacyConsent?: boolean;
+persistNotification?: boolean;
+autoResubscribe?: boolean;
+autoRegister?: boolean;
+notificationClickHandlerMatch?: string;
+notificationClickHandlerAction?: string;
+notifyButton?: {
+  enable?: boolean;
+  size?: 'small' | 'medium' | 'large';
+  position?: 'bottom-left' | 'bottom-right';
+  showCredit?: boolean;
+}
 ```
 
 ## Advanced Usage
