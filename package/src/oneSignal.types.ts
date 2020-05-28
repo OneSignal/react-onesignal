@@ -7,3 +7,20 @@ export interface IOneSignal {
   getUserId: () => Promise<string>,
   initialized: boolean,
 }
+
+export interface OneSignalOptions {
+  subdomainName?: string;
+  allowLocalhostAsSecureOrigin?: boolean;
+  requiresUserPrivacyConsent?: boolean;
+  persistNotification?: boolean;
+  autoResubscribe?: boolean;
+  autoRegister?: boolean;
+  notificationClickHandlerMatch?: string;
+  notificationClickHandlerAction?: string;
+  notifyButton?: {
+    enable?: boolean;
+    size?: 'small' | 'medium' | 'large';
+    position?: 'bottom-left' | 'bottom-right';
+    showCredit?: boolean;
+  }
+}
