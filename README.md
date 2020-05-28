@@ -100,11 +100,13 @@ const emailId = await OneSignal.getEmailId();
 
 ### External User ID
 
-You can use `setExternalUserId` and `getExternalUserId` to track user email.
+You can use `setExternalUserId` and `getExternalUserId` to track external user ID.
 
 ```js
+// Set external user ID
 OneSignal.setExternalUserId('your_id');
 
+// Get external user ID
 const externalUserId = await OneSignal.getExternalUserId();
 ```
 
