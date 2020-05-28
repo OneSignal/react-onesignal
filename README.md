@@ -98,6 +98,14 @@ OneSignal.setEmail('my_email@example.com');
 const emailId = await OneSignal.getEmailId();
 ```
 
+You can use `setExternalUserId` and `getExternalUserId` to track user email.
+
+```js
+OneSignal.setExternalUserId('your_id');
+
+const externalUserId = await OneSignal.getExternalUserId();
+```
+
 ## Contributing
 
 Pull requests are welcome! If you have any feedback, issue or suggestion, feel free to open [a new issue](https://github.com/pedro-lb/react-onesignal/issues/new) so we can talk about it 💬.
