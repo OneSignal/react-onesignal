@@ -12,36 +12,61 @@ const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
 
 /**
  * Maps The Options Object Into A String For The Module Script
- * @param o the options object
- * @param indent 
+ * @param options the options object
+ * @param indent
  */
-const mapOptionsObject = (o: any, indent: number = 0) => {
-  var out = '';
-  for (var p in o) {
-      if (o.hasOwnProperty(p)) {
-          var val = o[p];
-          out += new Array(4 * indent + 1).join(' ') + p + ': ';
-          if (typeof val === 'object') {
-            out += '{\n' + mapOptionsObject(val, indent + 1) + new Array(4 * indent + 1).join(' ') + '}';
-          } else if (typeof val === 'function') {
+const mapOptionsObject = (options: any, indent: number = 0) => {
+  const TABS_LENGTH = 2;
 
-          } else if (typeof val === 'boolean') {
-            out += val;
-          }
-          else {
-            out += '"' + val + '"';
-          }
-          out += ',\n';
-      }
+  let result = '';
+
+  const optionKeys = Object.keys(options || {});
+
+  for (let index = 0; index < optionKeys.length; index += 1) {
+    const key = optionKeys[index];
+
+    const hasOwnProperty = Object.prototype.hasOwnProperty.call(options, key);
+
+    if (!hasOwnProperty) {
+      continue;
+    }
+
+    const option = options[key];
+
+    // Functions are not supported, so we'll ignore them
+    if (typeof option === 'function') {
+      continue;
+    }
+
+    result += `${new Array(TABS_LENGTH * indent + 1).join(' ') + key}: `;
+
+    switch (typeof option) {
+      case 'object':
+        result += `{\n${mapOptionsObject(option, indent + 1)}${new Array(4 * indent + 1).join(' ')}}`;
+        break;
+
+      case 'boolean':
+      case 'number':
+        result += option;
+        break;
+
+      default:
+        result += `"${option}"`;
+        break;
+    }
+
+    result += ',\n';
   }
-  return out;
-}
+
+  return result;
+};
 
 /**
  * Provides the module script content to inject.
  */
 const getModuleScriptBody = (appId: string, options: OneSignalOptions) => {
-  let mappedOptions = mapOptionsObject(options);
+  const mappedOptions = mapOptionsObject(options);
+
   return `
     var OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
@@ -50,7 +75,7 @@ const getModuleScriptBody = (appId: string, options: OneSignalOptions) => {
         ${mappedOptions}
       });
     });
-  `
+  `;
 };
 
 /**
