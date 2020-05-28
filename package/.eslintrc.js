@@ -44,5 +44,6 @@ module.exports = {
     "no-param-reassign": 0,
     "import/extensions": 0,
     "dot-notation": 0,
+    "no-continue": 0,
   },
 };
