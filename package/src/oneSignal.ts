@@ -339,7 +339,7 @@ const sendTag = (key: string, val: string) => new Promise<string>((resolve, reje
 /**
  * Sets a collection of key/value "tag" pairs on OneSignal.
  *
- * @param keyValues
+ * @param keyValues obj
  */
 const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
