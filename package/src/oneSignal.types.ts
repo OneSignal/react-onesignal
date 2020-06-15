@@ -9,7 +9,7 @@ export interface IOneSignal {
   getExternalUserId: () => Promise<any>,
   initialized: boolean,
   sendTag: (key: string, val: string) => Promise<string>;
-  sendTags: (keyValues: object) => Promise<string>;
+  sendTags: (keyValues: object) => Promise<any>;
 }
 
 export interface OneSignalOptions {
