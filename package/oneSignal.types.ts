@@ -9,7 +9,7 @@ export interface IOneSignal {
   getExternalUserId: () => Promise<any>,
   initialized: boolean,
   sendTag: (key: string, val: string) => Promise<string>;
-  sendTags: (keyValues: object) => Promise<string>;
+  sendTags: (keyValues: object) => Promise<any>;
 }
 
 export interface OneSignalOptions {
@@ -27,14 +27,4 @@ export interface OneSignalOptions {
     position?: 'bottom-left' | 'bottom-right';
     showCredit?: boolean;
   }
-}
-
-export interface IOneSignalEventCallback{
-  callback: (result: any) => any
-}
-
-export interface IOneSignalEvent {
-  listener?: string;
-  event: string;
-  callback: IOneSignalEventCallback
 }
