@@ -110,6 +110,22 @@ OneSignal.setExternalUserId('your_id');
 const externalUserId = await OneSignal.getExternalUserId();
 ```
 
+### OneSignal Tags and Audience Segmenting
+
+You can use `sendTag` and `sendTags` to set OneSignal tags for segment filtering.
+```js
+// Send a tag to OneSignal for the current player
+OneSignal.sendTag('tag', 'tagValue');
+
+// Send multiple tags to OneSignal for the current player
+const keyValues = {
+  'tag1': 'value1',
+  'tag2': 'value2',
+  'tag3': 'value3',
+};
+OneSignal.sendTags(keyValues);
+```
+
 ## Contributing
 
 Pull requests are welcome! If you have any feedback, issue or suggestion, feel free to open [a new issue](https://github.com/pedro-lb/react-onesignal/issues/new) so we can talk about it 💬.
