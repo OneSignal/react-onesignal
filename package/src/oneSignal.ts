@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import {
   IOneSignal,
   OneSignalOptions,
@@ -85,7 +84,7 @@ const getModuleScriptBody = (appId: string, options: OneSignalOptions, events: I
 };
 
 /**
- * Take our object of events, and build OneSignal listeners.
+ * Take our object of OneSignal events and construct listeners.
  *
  * @param eventsArr Array of event/callback key/value pairs defined by IOneSignalEvent interface.
  * @return string Script snippet for injecting into the native OneSignal.push()  method.
@@ -96,8 +95,8 @@ const buildEventListeners = (eventsArr: IOneSignalEvent[]) => {
   // Let's make sure we've got an array that isn't empty.
   if (Array.isArray(eventsArr) && eventsArr.length) {
     eventsArr.forEach(event => {
-      // console.log(eventName)
-      returnStr += `OneSignal.on('${event.name}', ${event.callback});`
+      event.listener = event.listener || 'on';
+      returnStr += `OneSignal.${event.listener}('${event.event}', ${event.callback});`
     });
   }
   return returnStr;
@@ -166,7 +165,7 @@ const injectModuleScript = (appId: string, options: OneSignalOptions, events: IO
 /**
  * Initializes OneSignal.
  */
-const initialize = (appId: string, options: OneSignalOptions, events: IOneSignalEvent[]) => {
+const initialize = (appId: string, options: OneSignalOptions, events: IOneSignalEvent[] = []) => {
   if (!appId) {
     throw new Error('You need to provide your OneSignal appId.');
   }

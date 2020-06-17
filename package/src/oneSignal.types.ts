@@ -28,10 +28,11 @@ export interface OneSignalOptions {
 }
 
 export interface IOneSignalEventCallback{
-  callback?: (result: any) => boolean
+  callback: (result: any) => any
 }
 
 export interface IOneSignalEvent {
-  name: string;
+  listener?: string;
+  event: string;
   callback: IOneSignalEventCallback
 }
