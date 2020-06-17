@@ -26,3 +26,12 @@ export interface OneSignalOptions {
     showCredit?: boolean;
   }
 }
+
+export interface IOneSignalEventCallback{
+  callback?: (result: any) => boolean
+}
+
+export interface IOneSignalEvent {
+  name: string;
+  callback: IOneSignalEventCallback
+}

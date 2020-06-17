@@ -1,5 +1,9 @@
 // eslint-disable-next-line no-unused-vars
-import { IOneSignal, OneSignalOptions } from './oneSignal.types';
+import {
+  IOneSignal,
+  OneSignalOptions,
+  IOneSignalEvent,
+} from './oneSignal.types';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -64,18 +68,39 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
 /**
  * Provides the module script content to inject.
  */
-const getModuleScriptBody = (appId: string, options: OneSignalOptions) => {
+const getModuleScriptBody = (appId: string, options: OneSignalOptions, events: IOneSignalEvent[]) => {
   const mappedOptions = mapOptionsObject(options);
+  const listeners     = buildEventListeners(events);
 
   return `
     var OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
+      ${listeners}
       OneSignal.init({
         appId: "${appId}",
         ${mappedOptions}
       });
     });
   `;
+};
+
+/**
+ * Take our object of events, and build OneSignal listeners.
+ *
+ * @param eventsArr Array of event/callback key/value pairs defined by IOneSignalEvent interface.
+ * @return string Script snippet for injecting into the native OneSignal.push()  method.
+ */
+const buildEventListeners = (eventsArr: IOneSignalEvent[]) => {
+  let returnStr = '';
+
+  // Let's make sure we've got an array that isn't empty.
+  if (Array.isArray(eventsArr) && eventsArr.length) {
+    eventsArr.forEach(event => {
+      // console.log(eventName)
+      returnStr += `OneSignal.on('${event.name}', ${event.callback});`
+    });
+  }
+  return returnStr;
 };
 
 /**
@@ -129,9 +154,9 @@ const injectBaseScript = () => {
 /**
  * Injects the module script for OneSignal
  */
-const injectModuleScript = (appId: string, options: OneSignalOptions) => {
+const injectModuleScript = (appId: string, options: OneSignalOptions, events: IOneSignalEvent[]) => {
   injectScript(DEFAULT_MODULE_SCRIPT_ID, (script) => {
-    script.innerHTML = getModuleScriptBody(appId, options);
+    script.innerHTML = getModuleScriptBody(appId, options, events);
     script.async = true;
 
     return script;
@@ -141,7 +166,7 @@ const injectModuleScript = (appId: string, options: OneSignalOptions) => {
 /**
  * Initializes OneSignal.
  */
-const initialize = (appId: string, options: OneSignalOptions) => {
+const initialize = (appId: string, options: OneSignalOptions, events: IOneSignalEvent[]) => {
   if (!appId) {
     throw new Error('You need to provide your OneSignal appId.');
   }
@@ -151,7 +176,7 @@ const initialize = (appId: string, options: OneSignalOptions) => {
   }
 
   injectBaseScript();
-  injectModuleScript(appId, options);
+  injectModuleScript(appId, options, events);
 };
 
 /**
