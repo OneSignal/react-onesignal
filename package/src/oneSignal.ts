@@ -358,8 +358,8 @@ const sendTag = (key: string, val: string) => new Promise<string>((resolve, reje
 
   try {
     oneSignal.sendTag(key, val)
-        .then((value) => resolve(value))
-        .catch((error) => reject(error));
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
   } catch (error) {
     reject(error);
   }
@@ -380,8 +380,8 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
 
   try {
     oneSignal.sendTags(keyValues)
-        .then((value) => resolve(value))
-        .catch((error) => reject(error));
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
   } catch (error) {
     reject(error);
   }
