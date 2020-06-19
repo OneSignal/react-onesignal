@@ -8,6 +8,8 @@ export interface IOneSignal {
   setExternalUserId: (externalUserId: string | number) => Promise<void>,
   getExternalUserId: () => Promise<any>,
   initialized: boolean,
+  sendTag: (key: string, val: string) => Promise<string>;
+  sendTags: (keyValues: object) => Promise<any>;
 }
 
 export interface OneSignalOptions {

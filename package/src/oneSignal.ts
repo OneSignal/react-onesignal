@@ -343,6 +343,51 @@ const getExternalUserId = () => new Promise<string>((resolve, reject) => {
 });
 
 /**
+ * Sets a key/value "tag" pair on OneSignal.
+ *
+ * @param key string
+ * @param val string
+ */
+const sendTag = (key: string, val: string) => new Promise<string>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.sendTag(key, val)
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Sets a collection of key/value "tag" pairs on OneSignal.
+ *
+ * @param keyValues obj
+ */
+const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.sendTags(keyValues)
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
@@ -355,6 +400,8 @@ const ReactOneSignal = {
   getPlayerId,
   setExternalUserId,
   getExternalUserId,
+  sendTag,
+  sendTags,
 };
 
 export default ReactOneSignal;
