@@ -115,16 +115,16 @@ You can also listen for native OneSignal events like `subscriptionChange`.
 
 To add an event listener to the `OneSignal.push()` array, pass an array of events to the `ReactOneSignal.initialize()` function as the third parameter.
 
-Each object in the array should contain:  
+Each object in the array should contain:
 * `listener` -- (optional) Default value: `'on'`.
 Some events can be listened for via multiple listeners (e.g. `.on()`, `.once()`).
-[Check the docs](https://documentation.onesignal.com/docs/web-push-sdk) to see which listeners listen for your event.  
+[Check the docs](https://documentation.onesignal.com/docs/web-push-sdk) to see which listeners listen for your event.
 Example: `'on'` | `'once'`
 
-* `event` -- Name of the event being listened for.  
+* `event` -- Name of the event being listened for.
 Example: `'subscriptionChange'`
 
-* `callback` -- Callback function for event.  
+* `callback` -- Callback function for event.
 Example: `(value) => { console.log(value); }`
 
 For documentation on events and event listeners, check out the [Web Push SDK docs](https://documentation.onesignal.com/docs/web-push-sdk).
@@ -161,6 +161,12 @@ ReactOneSignal.initialize(applicationId, options, events);
 ## Contributing
 
 Pull requests are welcome! If you have any feedback, issue or suggestion, feel free to open [a new issue](https://github.com/pedro-lb/react-onesignal/issues/new) so we can talk about it 💬.
+
+## Made possible by
+
+<a href="https://github.com/pedro-lb/react-onesignal/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=pedro-lb/react-onesignal" />
+</a>
 
 ## License
 
