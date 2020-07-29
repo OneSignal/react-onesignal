@@ -13,6 +13,7 @@ export interface IOneSignal {
 }
 
 export interface OneSignalOptions {
+  safari_web_id?: string,
   subdomainName?: string;
   allowLocalhostAsSecureOrigin?: boolean;
   requiresUserPrivacyConsent?: boolean;
