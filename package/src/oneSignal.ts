@@ -39,7 +39,7 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
     }
 
     if (key.includes('.')) {
-      key = `"${key}"`
+      key = `"${key}"`;
     }
 
     result += `${new Array(TABS_LENGTH * indent + 1).join(' ') + key}: `;

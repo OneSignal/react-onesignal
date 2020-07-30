@@ -1,19 +1,20 @@
 export interface IOneSignal {
-  notificationPermission: string[],
-  registerForPushNotifications: () => Promise<any>,
-  getNotificationPermission: () => Promise<string>,
-  setEmail: (email: string) => Promise<string>,
-  getEmailId: () => Promise<string>,
-  getUserId: () => Promise<string>,
-  setExternalUserId: (externalUserId: string | number) => Promise<void>,
-  getExternalUserId: () => Promise<any>,
-  initialized: boolean,
+  notificationPermission: string[];
+  registerForPushNotifications: () => Promise<any>;
+  getNotificationPermission: () => Promise<string>;
+  setEmail: (email: string) => Promise<string>;
+  getEmailId: () => Promise<string>;
+  getUserId: () => Promise<string>;
+  setExternalUserId: (externalUserId: string | number) => Promise<void>;
+  getExternalUserId: () => Promise<any>;
+  initialized: boolean;
   sendTag: (key: string, val: string) => Promise<string>;
   sendTags: (keyValues: object) => Promise<any>;
 }
 
 export interface OneSignalOptions {
-  safari_web_id?: string,
+  // eslint-disable-next-line camelcase
+  safari_web_id?: string;
   subdomainName?: string;
   allowLocalhostAsSecureOrigin?: boolean;
   requiresUserPrivacyConsent?: boolean;
@@ -33,7 +34,7 @@ export interface OneSignalOptions {
       bottom?: string;
       right?: string;
       left?: string;
-    },
+    };
     text?: {
       [key: string]: string;
     };
