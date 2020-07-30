@@ -38,6 +38,7 @@ OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', options);
 Where options is:
 
 ```js
+safari_web_id?: string;
 subdomainName?: string;
 allowLocalhostAsSecureOrigin?: boolean;
 requiresUserPrivacyConsent?: boolean;
@@ -51,6 +52,19 @@ notifyButton?: {
   size?: 'small' | 'medium' | 'large';
   position?: 'bottom-left' | 'bottom-right';
   showCredit?: boolean;
+  prenotify?: boolean;
+    theme?: 'default' | 'inverse';
+    offset?: {
+      bottom?: string;
+      right?: string;
+      left?: string;
+    },
+    text?: {
+      [key: string]: string;
+    };
+    colors?: {
+      [key: string]: string;
+    };
 }
 ```
 
