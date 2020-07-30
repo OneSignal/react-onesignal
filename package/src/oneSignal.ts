@@ -23,7 +23,7 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
   const optionKeys = Object.keys(options || {});
 
   for (let index = 0; index < optionKeys.length; index += 1) {
-    const key = optionKeys[index];
+    let key = optionKeys[index];
 
     const hasOwnProperty = Object.prototype.hasOwnProperty.call(options, key);
 
@@ -36,6 +36,10 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
     // Functions are not supported, so we'll ignore them
     if (typeof option === 'function') {
       continue;
+    }
+
+    if (key.includes('.')) {
+      key = `"${key}"`
     }
 
     result += `${new Array(TABS_LENGTH * indent + 1).join(' ') + key}: `;
