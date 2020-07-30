@@ -27,6 +27,19 @@ export interface OneSignalOptions {
     size?: 'small' | 'medium' | 'large';
     position?: 'bottom-left' | 'bottom-right';
     showCredit?: boolean;
+    prenotify?: boolean;
+    theme?: 'default' | 'inverse';
+    offset?: {
+      bottom?: string;
+      right?: string;
+      left?: string;
+    },
+    text?: {
+      [key: string]: string;
+    };
+    colors?: {
+      [key: string]: string;
+    };
   }
 }
 
