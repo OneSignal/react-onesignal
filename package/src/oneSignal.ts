@@ -266,7 +266,7 @@ const isPushNotificationsEnabled = () => new Promise<boolean>((resolve, reject) 
   } catch (error) {
     reject(error);
   }
-})
+});
 
 /**
  * Check if the current browser environment viewing the page
@@ -284,6 +284,28 @@ const isPushNotificationsSupported = () => {
 
   return oneSignal.isPushNotificationsSupported();
 };
+
+/**
+ * This function lets a site mute or unmute notifications for the current user.
+ *
+ * @param {boolean} unmute
+ */
+const setSubscription = (unmute: boolean) => new Promise<any> ((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.setSubscription(unmute)
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
 
 /**
  * Sets the email on OneSignal instance.
@@ -444,6 +466,7 @@ const ReactOneSignal = {
   registerForPushNotifications,
   isPushNotificationsEnabled,
   isPushNotificationsSupported,
+  setSubscription,
   setEmail,
   getEmailId,
   getPlayerId,
