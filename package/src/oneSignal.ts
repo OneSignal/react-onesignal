@@ -69,7 +69,7 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
  * Take our object of OneSignal events and construct listeners.
  *
  * @param eventsArr Array of event/callback key/value pairs defined by IOneSignalEvent interface.
- * @return string Script snippet for injecting into the native OneSignal.push()  method.
+ * @return {string} Script snippet for injecting into the native OneSignal.push()  method.
  */
 const buildEventListeners = (eventsArr: IOneSignalEvent[]) => {
   let returnStr = '';
@@ -243,6 +243,71 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
 });
 
 /**
+ * Check if the user has already accepted push notifications and
+ * successfully registered with Google's FCM server and OneSignal's
+ * server (i.e. the user is able to receive notifications).
+ * Only compatible with HTTPS
+ *
+ * @return {Promise<boolean>} A promise that return if the user is
+ * able to receive notifications
+ */
+const isPushNotificationsEnabled = () => new Promise<boolean>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.isPushNotificationsEnabled()
+      .then((value => resolve(value)))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Check if the current browser environment viewing the page
+ * supports push notifications.
+ *
+ * @return {boolean} The current browser environment viewing the page
+ * supports push notifications.
+ */
+const isPushNotificationsSupported = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.isPushNotificationsSupported();
+};
+
+/**
+ * This function lets a site mute or unmute notifications for the current user.
+ *
+ * @param {boolean} unmute
+ */
+const setSubscription = (unmute: boolean) => new Promise<any> ((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.setSubscription(unmute)
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
  * Sets the email on OneSignal instance.
  * @param email email
  */
@@ -399,6 +464,9 @@ const ReactOneSignal = {
   notificationPermission,
   getNotificationPermission,
   registerForPushNotifications,
+  isPushNotificationsEnabled,
+  isPushNotificationsSupported,
+  setSubscription,
   setEmail,
   getEmailId,
   getPlayerId,
