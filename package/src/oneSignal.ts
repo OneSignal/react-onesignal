@@ -207,7 +207,7 @@ const getNotificationPermission = () => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -229,7 +229,7 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -250,7 +250,7 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -270,7 +270,7 @@ const getEmailId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -290,7 +290,7 @@ const getPlayerId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -313,7 +313,7 @@ const setExternalUserId = (
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -333,7 +333,7 @@ const getExternalUserId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -356,7 +356,7 @@ const sendTag = (key: string, val: string) => new Promise<string>((resolve, reje
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
@@ -378,7 +378,7 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error('one signal not setup'));
     return;
   }
 
