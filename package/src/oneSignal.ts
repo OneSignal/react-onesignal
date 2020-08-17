@@ -11,6 +11,11 @@ const DEFAULT_MODULE_SCRIPT_ID = 'react-onesignal-module';
 const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
 
 /**
+ * Error to be thrown when OneSignal is not setup correctly.
+ */
+const ONESIGNAL_NOT_SETUP_ERROR = 'OneSignal is not setup correctly.';
+
+/**
  * Maps The Options Object Into A String For The Module Script
  * @param options the options object
  * @param indent
@@ -207,7 +212,7 @@ const getNotificationPermission = () => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -229,7 +234,7 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -261,7 +266,7 @@ const isPushNotificationsEnabled = () => new Promise<boolean>((resolve, reject) 
 
   try {
     oneSignal.isPushNotificationsEnabled()
-      .then((value => resolve(value)))
+      .then(((value) => resolve(value)))
       .catch((error) => reject(error));
   } catch (error) {
     reject(error);
@@ -290,7 +295,7 @@ const isPushNotificationsSupported = () => {
  *
  * @param {boolean} unmute
  */
-const setSubscription = (unmute: boolean) => new Promise<any> ((resolve, reject) => {
+const setSubscription = (unmute: boolean) => new Promise<any>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
@@ -315,7 +320,7 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -335,7 +340,7 @@ const getEmailId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -355,7 +360,7 @@ const getPlayerId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -378,7 +383,7 @@ const setExternalUserId = (
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -398,7 +403,7 @@ const getExternalUserId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -421,7 +426,7 @@ const sendTag = (key: string, val: string) => new Promise<string>((resolve, reje
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -443,7 +448,7 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject(new Error('one signal not setup'));
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
