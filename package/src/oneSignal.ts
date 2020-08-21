@@ -465,6 +465,7 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
+  getOneSignalInstance,
   initialize,
   notificationPermission,
   getNotificationPermission,
