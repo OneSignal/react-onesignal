@@ -10,6 +10,7 @@ export interface IOneSignal {
   getEmailId: () => Promise<string>;
   getUserId: () => Promise<string>;
   setExternalUserId: (externalUserId: string | number) => Promise<void>;
+  removeExternalUserId: () => Promise<void>;
   getExternalUserId: () => Promise<any>;
   initialized: boolean;
   sendTag: (key: string, val: string) => Promise<string>;

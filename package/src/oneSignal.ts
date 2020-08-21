@@ -417,6 +417,27 @@ const setExternalUserId = (
 });
 
 /**
+ * Sets the external user ID on OneSignal instance.
+ */
+const removeExternalUserId = (
+) => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.removeExternalUserId()
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
  * Gets the external user ID configured on OneSignal instance.
  */
 const getExternalUserId = () => new Promise<string>((resolve, reject) => {
@@ -497,6 +518,7 @@ const ReactOneSignal = {
   getEmailId,
   getPlayerId,
   setExternalUserId,
+  removeExternalUserId,
   getExternalUserId,
   sendTag,
   sendTags,
