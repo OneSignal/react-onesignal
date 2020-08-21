@@ -299,7 +299,7 @@ const setSubscription = (unmute: boolean) => new Promise<any>((resolve, reject) 
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
