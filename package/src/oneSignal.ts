@@ -334,6 +334,26 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
 });
 
 /**
+ * Remove email on OneSignal instance.
+ */
+const logoutEmail = () => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.logoutEmail()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+})
+
+/**
  * Gets the email ID configured on OneSignal instance.
  */
 const getEmailId = () => new Promise<string>((resolve, reject) => {
@@ -473,6 +493,7 @@ const ReactOneSignal = {
   isPushNotificationsSupported,
   setSubscription,
   setEmail,
+  logoutEmail,
   getEmailId,
   getPlayerId,
   setExternalUserId,

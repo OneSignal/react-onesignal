@@ -6,6 +6,7 @@ export interface IOneSignal {
   isPushNotificationsSupported: () => boolean;
   setSubscription: (unmute: boolean) => Promise<any>;
   setEmail: (email: string) => Promise<string>;
+  logoutEmail: () => Promise<void>;
   getEmailId: () => Promise<string>;
   getUserId: () => Promise<string>;
   setExternalUserId: (externalUserId: string | number) => Promise<void>;
