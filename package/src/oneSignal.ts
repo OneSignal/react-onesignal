@@ -11,6 +11,11 @@ const DEFAULT_MODULE_SCRIPT_ID = 'react-onesignal-module';
 const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
 
 /**
+ * Error to be thrown when OneSignal is not setup correctly.
+ */
+const ONESIGNAL_NOT_SETUP_ERROR = 'OneSignal is not setup correctly.';
+
+/**
  * Maps The Options Object Into A String For The Module Script
  * @param options the options object
  * @param indent
@@ -69,7 +74,7 @@ const mapOptionsObject = (options: any, indent: number = 0) => {
  * Take our object of OneSignal events and construct listeners.
  *
  * @param eventsArr Array of event/callback key/value pairs defined by IOneSignalEvent interface.
- * @return string Script snippet for injecting into the native OneSignal.push()  method.
+ * @return {string} Script snippet for injecting into the native OneSignal.push()  method.
  */
 const buildEventListeners = (eventsArr: IOneSignalEvent[]) => {
   let returnStr = '';
@@ -207,7 +212,7 @@ const getNotificationPermission = () => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -229,12 +234,77 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
   try {
     oneSignal.registerForPushNotifications()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Check if the user has already accepted push notifications and
+ * successfully registered with Google's FCM server and OneSignal's
+ * server (i.e. the user is able to receive notifications).
+ * Only compatible with HTTPS
+ *
+ * @return {Promise<boolean>} A promise that return if the user is
+ * able to receive notifications
+ */
+const isPushNotificationsEnabled = () => new Promise<boolean>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.isPushNotificationsEnabled()
+      .then(((value) => resolve(value)))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Check if the current browser environment viewing the page
+ * supports push notifications.
+ *
+ * @return {boolean} The current browser environment viewing the page
+ * supports push notifications.
+ */
+const isPushNotificationsSupported = () => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    return null;
+  }
+
+  return oneSignal.isPushNotificationsSupported();
+};
+
+/**
+ * This function lets a site mute or unmute notifications for the current user.
+ *
+ * @param {boolean} unmute
+ */
+const setSubscription = (unmute: boolean) => new Promise<any>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject();
+    return;
+  }
+
+  try {
+    oneSignal.setSubscription(unmute)
       .then((value) => resolve(value))
       .catch((error) => reject(error));
   } catch (error) {
@@ -250,7 +320,7 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -270,7 +340,7 @@ const getEmailId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -290,7 +360,7 @@ const getPlayerId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -313,7 +383,7 @@ const setExternalUserId = (
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -333,7 +403,7 @@ const getExternalUserId = () => new Promise<string>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -356,7 +426,7 @@ const sendTag = (key: string, val: string) => new Promise<string>((resolve, reje
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -378,7 +448,7 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -399,6 +469,9 @@ const ReactOneSignal = {
   notificationPermission,
   getNotificationPermission,
   registerForPushNotifications,
+  isPushNotificationsEnabled,
+  isPushNotificationsSupported,
+  setSubscription,
   setEmail,
   getEmailId,
   getPlayerId,

@@ -2,6 +2,9 @@ export interface IOneSignal {
   notificationPermission: string[];
   registerForPushNotifications: () => Promise<any>;
   getNotificationPermission: () => Promise<string>;
+  isPushNotificationsEnabled: () => Promise<boolean>;
+  isPushNotificationsSupported: () => boolean;
+  setSubscription: (unmute: boolean) => Promise<any>;
   setEmail: (email: string) => Promise<string>;
   getEmailId: () => Promise<string>;
   getUserId: () => Promise<string>;

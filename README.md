@@ -37,7 +37,7 @@ OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', options);
 
 Where options is:
 
-```js
+```ts
 safari_web_id?: string;
 subdomainName?: string;
 allowLocalhostAsSecureOrigin?: boolean;
@@ -66,6 +66,25 @@ notifyButton?: {
       [key: string]: string;
     };
 }
+```
+
+And `OneSignal` object contains:
+
+```ts
+notificationPermission: string[];
+registerForPushNotifications: () => Promise<any>;
+getNotificationPermission: () => Promise<string>;
+isPushNotificationsEnabled: () => Promise<boolean>;
+isPushNotificationsSupported: () => boolean;
+setSubscription: (unmute: boolean) => Promise<any>;
+setEmail: (email: string) => Promise<string>;
+getEmailId: () => Promise<string>;
+getUserId: () => Promise<string>;
+setExternalUserId: (externalUserId: string | number) => Promise<void>;
+getExternalUserId: () => Promise<any>;
+initialized: boolean;
+sendTag: (key: string, val: string) => Promise<string>;
+sendTags: (keyValues: object) => Promise<any>;
 ```
 
 ## Advanced Usage
