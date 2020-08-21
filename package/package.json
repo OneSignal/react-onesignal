@@ -18,7 +18,9 @@
     "copy_publish_files": "cp ../README.md .",
     "prepublish": "yarn run build && yarn run copy_publish_files"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "react": "16.x.x"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-external-helpers": "^7.0.0",
