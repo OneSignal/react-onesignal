@@ -19,7 +19,7 @@
     "prepublish": "yarn run build && yarn run copy_publish_files"
   },
   "peerDependencies": {
-    "react": "16.x.x"
+    "react": ">= 16.8"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
