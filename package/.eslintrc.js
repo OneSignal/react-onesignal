@@ -45,5 +45,7 @@ module.exports = {
     "import/extensions": 0,
     "dot-notation": 0,
     "no-continue": 0,
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"]
   },
 };

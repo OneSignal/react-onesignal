@@ -1,5 +1,6 @@
-/* eslint-disable no-unused-vars */
-
+/**
+ * Defines possible values for permissions statuses.
+ */
 enum permissionStatusEnum {
   Default = 'default',
   Granted = 'granted',
