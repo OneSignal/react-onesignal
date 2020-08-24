@@ -1,5 +1,8 @@
 // eslint-disable-next-line no-unused-vars
+import { useState } from 'react';
 import { IOneSignal, OneSignalOptions, IOneSignalEvent } from './oneSignal.types';
+
+import { useInterval } from './hooks';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -462,9 +465,29 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
 });
 
 /**
+ * hook that waits for oneSignal initialization before executing the callback
+ * usefull for using setEmail and setExternalUserId without getting error
+ * it uses setInterval to check if OneSignal is setup, calling the callback when it is
+ *
+ * @param callback the callback to be called when oneSignal is initilized
+ * @param pollingIntervalMs time beetween checks, null to disable in development
+ */
+export const useOneSignalSetup = (callback: () => void, pollingIntervalMs: number | null = 100) => {
+  const [initialized, setInitialized] = useState(false);
+  useInterval(() => {
+    const oneSignal = getOneSignalInstance();
+    if (oneSignal) {
+      setInitialized(true);
+      callback();
+    }
+  }, initialized ? null : pollingIntervalMs);
+};
+
+/**
  * Object for manipulating OneSignal.
  */
 const ReactOneSignal = {
+  getOneSignalInstance,
   initialize,
   notificationPermission,
   getNotificationPermission,
@@ -479,6 +502,7 @@ const ReactOneSignal = {
   getExternalUserId,
   sendTag,
   sendTags,
+  useOneSignalSetup,
 };
 
 export default ReactOneSignal;
