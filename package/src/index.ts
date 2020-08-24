@@ -1,4 +1,4 @@
-import permissionStatusEnum from './permissionStatus';
+import permissionStatusEnum from './constants/permissionStatusEnum';
 import OneSignal from './oneSignal';
 
 export {
