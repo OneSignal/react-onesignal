@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IOneSignal, OneSignalOptions, IOneSignalEvent } from './oneSignal.types';
 
-import { useInterval } from './hooks';
+import useInterval from './hooks/useInterval';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 

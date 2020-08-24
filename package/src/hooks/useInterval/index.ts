@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react';
 
-// custom hook inspired by Dan Abramov. https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-// eslint-disable-next-line import/prefer-default-export
-export function useInterval(callback: () => void, delay: number | null) {
+/**
+ * Hook that exposes an interval, similar to setInterval.
+ * @param callback The callback function
+ * @param delay The delay
+ */
+function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef<() => void>();
 
   // Remember the latest callback.
@@ -16,9 +19,14 @@ export function useInterval(callback: () => void, delay: number | null) {
       const tick = () => {
         savedCallback.current!();
       };
+
       const id = setInterval(tick, delay);
+
       return () => clearInterval(id);
     }
+
     return () => {};
   }, [delay]);
 }
+
+export default useInterval;
