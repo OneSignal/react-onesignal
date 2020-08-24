@@ -207,6 +207,30 @@ const keyValues = {
 OneSignal.sendTags(keyValues);
 ```
 
+### Setup hook
+
+To avoid error due to OneSignal not initialized, you can use useOneSignalSetup hook, passing a callback to be called when OneSignal is ready
+
+```ts
+import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+
+type AppProps = {
+  user: {
+    id: string;
+    Email: string;
+  };
+};
+
+function App(props: AppProps) {
+  const {user} = props;
+  const isOneSignalRunning = process.env.NODE_ENV === 'production';
+  useOneSignalSetup(() => {
+    OneSignal.setEmail(user.Email);
+    OneSignal.setExternalUserId(user.id);
+  }, isOneSignalRunning ? 100 : null);
+}
+```
+
 ## Contributing
 
 Pull requests are welcome! If you have any feedback, issue or suggestion, feel free to open [a new issue](https://github.com/pedro-lb/react-onesignal/issues/new) so we can talk about it 💬.
