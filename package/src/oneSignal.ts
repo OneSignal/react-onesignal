@@ -1,7 +1,4 @@
-import { useState } from 'react';
 import { IOneSignal, OneSignalOptions, IOneSignalEvent } from './oneSignal.types';
-
-import useInterval from './hooks/useInterval';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -117,7 +114,7 @@ const getModuleScriptBody = (
 /**
  * Gets the window OneSignal instance.
  */
-const getOneSignalInstance = () => {
+export const getOneSignalInstance = () => {
   const OneSignal: IOneSignal = window['OneSignal'];
 
   if (OneSignal?.initialized) {
@@ -504,24 +501,6 @@ const sendTags = (keyValues: object) => new Promise<string>((resolve, reject) =>
   }
 });
 
-/**
- * hook that waits for oneSignal initialization before executing the callback
- * useful for using setEmail and setExternalUserId without getting error
- * it uses setInterval to check if OneSignal is setup, calling the callback when it is
- *
- * @param callback the callback to be called when oneSignal is initialized
- * @param pollingIntervalMs time between checks, null to disable in development
- */
-export const useOneSignalSetup = (callback: () => void, pollingIntervalMs: number | null = 100) => {
-  const [initialized, setInitialized] = useState(false);
-  useInterval(() => {
-    const oneSignal = getOneSignalInstance();
-    if (oneSignal) {
-      setInitialized(true);
-      callback();
-    }
-  }, initialized ? null : pollingIntervalMs);
-};
 
 /**
  * Object for manipulating OneSignal.
@@ -544,7 +523,6 @@ const ReactOneSignal = {
   getExternalUserId,
   sendTag,
   sendTags,
-  useOneSignalSetup,
 };
 
 export default ReactOneSignal;

@@ -230,12 +230,12 @@ type AppProps = {
 };
 
 function App(props: AppProps) {
-  const {user} = props;
-  const isOneSignalRunning = process.env.NODE_ENV === 'production';
+  const { user } = props;
+
   useOneSignalSetup(() => {
     OneSignal.setEmail(user.Email);
     OneSignal.setExternalUserId(user.id);
-  }, isOneSignalRunning ? 100 : null);
+  });
 }
 ```
 
