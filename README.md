@@ -1,6 +1,11 @@
 # React OneSignal
 
-[![NPM](https://img.shields.io/npm/v/react-onesignal.svg)](https://www.npmjs.com/package/react-onesignal) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-onesignal.svg?style=flat-square)](https://www.npmjs.com/package/@react-onesignal/core)
+[![Issues](https://img.shields.io/github/issues/pedro-lb/react-onesignal?style=flat-square)](#)
+[![Stars](https://img.shields.io/github/stars/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/stargazers)
+[![Forks](https://img.shields.io/github/forks/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/network/members)
+[![Contributors](https://img.shields.io/github/contributors/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/graphs/contributors)
+[![Languages](https://img.shields.io/github/languages/count/pedro-lb/react-onesignal?style=flat-square)](#)
 
 This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses React for its front-end codebase.
 
