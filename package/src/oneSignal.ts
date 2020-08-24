@@ -302,7 +302,7 @@ const setSubscription = (unmute: boolean) => new Promise<any>((resolve, reject) 
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
-    reject();
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
     return;
   }
 
@@ -335,6 +335,26 @@ const setEmail = (email: string) => new Promise<string>((resolve, reject) => {
     reject(error);
   }
 });
+
+/**
+ * Remove email on OneSignal instance.
+ */
+const logoutEmail = () => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.logoutEmail()
+      .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+})
 
 /**
  * Gets the email ID configured on OneSignal instance.
@@ -392,6 +412,27 @@ const setExternalUserId = (
 
   try {
     oneSignal.setExternalUserId(externalUserId)
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Sets the external user ID on OneSignal instance.
+ */
+const removeExternalUserId = (
+) => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.removeExternalUserId()
       .then(() => resolve())
       .catch((error) => reject(error));
   } catch (error) {
@@ -496,9 +537,11 @@ const ReactOneSignal = {
   isPushNotificationsSupported,
   setSubscription,
   setEmail,
+  logoutEmail,
   getEmailId,
   getPlayerId,
   setExternalUserId,
+  removeExternalUserId,
   getExternalUserId,
   sendTag,
   sendTags,

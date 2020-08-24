@@ -78,9 +78,11 @@ isPushNotificationsEnabled: () => Promise<boolean>;
 isPushNotificationsSupported: () => boolean;
 setSubscription: (unmute: boolean) => Promise<any>;
 setEmail: (email: string) => Promise<string>;
+logoutEmail: () => Promise<void>;
 getEmailId: () => Promise<string>;
 getUserId: () => Promise<string>;
 setExternalUserId: (externalUserId: string | number) => Promise<void>;
+removeExternalUserId: () => Promise<void>;
 getExternalUserId: () => Promise<any>;
 initialized: boolean;
 sendTag: (key: string, val: string) => Promise<string>;
@@ -121,7 +123,7 @@ await OneSignal.registerForPushNotifications();
 
 ### User Email Tracking
 
-You can use `setEmail` and `getEmailId` to track user email.
+You can use `setEmail`, `getEmailId` and `logoutEmail` to track user email.
 
 ```js
 // Set email to track & notify specific users
@@ -129,11 +131,14 @@ OneSignal.setEmail('my_email@example.com');
 
 // Check which email is configured in this browser
 const emailId = await OneSignal.getEmailId();
+
+// Remove email tracking
+OneSignal.logoutEmail();
 ```
 
 ### External User ID
 
-You can use `setExternalUserId` and `getExternalUserId` to track external user ID.
+You can use `setExternalUserId`, `getExternalUserId` and `removeExternalUserId` to track external user ID.
 
 ```js
 // Set external user ID
@@ -141,6 +146,9 @@ OneSignal.setExternalUserId('your_id');
 
 // Get external user ID
 const externalUserId = await OneSignal.getExternalUserId();
+
+// Remove external user ID
+OneSignal.removeExternalUserId();
 ```
 
 ## Events and Event Listeners
