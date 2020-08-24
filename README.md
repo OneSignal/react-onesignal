@@ -1,6 +1,6 @@
 # React OneSignal
 
-[![NPM](https://img.shields.io/npm/v/react-onesignal.svg?style=flat-square)](https://www.npmjs.com/package/@react-onesignal/core)
+[![NPM](https://img.shields.io/npm/v/react-onesignal.svg?style=flat-square)](https://www.npmjs.com/package/react-onesignal)
 [![Issues](https://img.shields.io/github/issues/pedro-lb/react-onesignal?style=flat-square)](#)
 [![Stars](https://img.shields.io/github/stars/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/stargazers)
 [![Forks](https://img.shields.io/github/forks/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/network/members)
