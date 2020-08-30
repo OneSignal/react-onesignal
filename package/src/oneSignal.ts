@@ -1,4 +1,4 @@
-import { IOneSignal, OneSignalOptions, IOneSignalEvent } from './oneSignal.types';
+import { IOneSignal, OneSignalOptions, IOneSignalEvent, IOneSignalAutoPromptOptions } from './oneSignal.types';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -240,6 +240,46 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
   try {
     oneSignal.registerForPushNotifications()
       .then((value) => resolve(value))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Shows a sliding modal prompt on the page for users.
+ */
+const showSlidedownPrompt = (options?: IOneSignalAutoPromptOptions) => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.showSlidedownPrompt(options)
+      .then(((value) => resolve(value)))
+      .catch((error) => reject(error));
+  } catch (error) {
+    reject(error);
+  }
+});
+
+/**
+ * Shows a category sliding modal prompt on the page for users.
+ */
+const showCategorySlidedown = (options?: IOneSignalAutoPromptOptions) => new Promise<void>((resolve, reject) => {
+  const oneSignal = getOneSignalInstance();
+
+  if (!oneSignal) {
+    reject(new Error(ONESIGNAL_NOT_SETUP_ERROR));
+    return;
+  }
+
+  try {
+    oneSignal.showCategorySlidedown(options)
+      .then(((value) => resolve(value)))
       .catch((error) => reject(error));
   } catch (error) {
     reject(error);
@@ -511,6 +551,8 @@ const ReactOneSignal = {
   notificationPermission,
   getNotificationPermission,
   registerForPushNotifications,
+  showSlidedownPrompt,
+  showCategorySlidedown,
   isPushNotificationsEnabled,
   isPushNotificationsSupported,
   setSubscription,
