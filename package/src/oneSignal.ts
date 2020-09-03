@@ -1,4 +1,6 @@
-import { IOneSignal, OneSignalOptions, IOneSignalEvent, IOneSignalAutoPromptOptions } from './oneSignal.types';
+import {
+  IOneSignal, OneSignalOptions, IOneSignalEvent, IOneSignalAutoPromptOptions,
+} from './oneSignal.types';
 
 const DEFAULT_BASE_SCRIPT_ID = 'react-onesignal-base';
 
@@ -249,7 +251,9 @@ const registerForPushNotifications = () => new Promise<any>((resolve, reject) =>
 /**
  * Shows a sliding modal prompt on the page for users.
  */
-const showSlidedownPrompt = (options?: IOneSignalAutoPromptOptions) => new Promise<void>((resolve, reject) => {
+const showSlidedownPrompt = (
+  options?: IOneSignalAutoPromptOptions,
+) => new Promise<void>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
@@ -269,7 +273,9 @@ const showSlidedownPrompt = (options?: IOneSignalAutoPromptOptions) => new Promi
 /**
  * Shows a category sliding modal prompt on the page for users.
  */
-const showCategorySlidedown = (options?: IOneSignalAutoPromptOptions) => new Promise<void>((resolve, reject) => {
+const showCategorySlidedown = (
+  options?: IOneSignalAutoPromptOptions,
+) => new Promise<void>((resolve, reject) => {
   const oneSignal = getOneSignalInstance();
 
   if (!oneSignal) {
