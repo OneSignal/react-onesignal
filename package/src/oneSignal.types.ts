@@ -1,6 +1,8 @@
 export interface IOneSignal {
   notificationPermission: string[];
   registerForPushNotifications: () => Promise<any>;
+  showSlidedownPrompt: (options?: IOneSignalAutoPromptOptions) => Promise<any>;
+  showCategorySlidedown: (options?: IOneSignalAutoPromptOptions) => Promise<any>;
   getNotificationPermission: () => Promise<string>;
   isPushNotificationsEnabled: () => Promise<boolean>;
   isPushNotificationsSupported: () => boolean;
@@ -57,4 +59,26 @@ export interface IOneSignalEvent {
   listener?: string;
   event: string;
   callback: IOneSignalEventCallback
+}
+
+export interface IOneSignalTagCategory {
+  tag: string;
+  label: string;
+  checked?: boolean;
+}
+
+export interface IOneSignalCategories {
+  positiveUpdateButton: string;
+  negativeUpdateButton: string;
+  savingButtonText: string;
+  errorButtonText: string;
+  updateMessage: string;
+  tags: IOneSignalTagCategory[];
+}
+
+export interface IOneSignalAutoPromptOptions {
+  force?: boolean;
+  forceSlidedownOverNative?: boolean;
+  isInUpdateMode?: boolean;
+  categoryOptions?: IOneSignalCategories;
 }
