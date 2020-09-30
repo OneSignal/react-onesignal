@@ -58,7 +58,7 @@ export interface IOneSignalEventCallback{
 export interface IOneSignalEvent {
   listener?: string;
   event: string;
-  callback: IOneSignalEventCallback
+  callback: (result: any) => any
 }
 
 export interface IOneSignalTagCategory {
