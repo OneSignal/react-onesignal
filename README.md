@@ -13,6 +13,10 @@ OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-
 
 You can find more information on OneSignal [here](https://onesignal.com/).
 
+## Notice
+
+This is now the official OneSignal package for React. More details [here](https://github.com/OneSignal/react-onesignal/issues/38).
+
 ## Install
 
 You can use `yarn` or `npm`.
