@@ -1,13 +1,14 @@
 {
   "name": "react-onesignal",
-  "version": "1.7.0",
+  "version": "2.0.0-beta1",
   "description": "React OneSignal Module: Make it easy to integrate OneSignal with your React App!",
-  "author": "pedro-lb",
+  "author": "rgomezp",
+  "contributors": [{ "name": "Rodrigo Gomez-Palacio" }, { "name": "Pedro Bini" }],
   "license": "MIT",
-  "repository": "pedro-lb/react-onesignal",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "types": "./index.d.ts",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
@@ -73,3 +74,4 @@
     "react"
   ]
 }
+
