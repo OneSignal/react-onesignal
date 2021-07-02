@@ -16,8 +16,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./src --ext .js,.jsx,.ts,.tsx",
     "build": "rollup -c",
-    "copy_publish_files": "cp ../README.md .",
-    "prepublish": "yarn run build && yarn run copy_publish_files"
+    "prepublish": "yarn run build"
   },
   "peerDependencies": {
     "react": ">= 16.8"
