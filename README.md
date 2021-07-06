@@ -59,8 +59,9 @@ await OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
 ---
 
 ```js
+const [initialized, setInitialized] = useState(false);
 OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx').then(() => {
-  this.setState({ initialized: true });
+  setInitialized(true);
   OneSignal.showSlidedownPrompt().then(() => {
     // do other stuff
   });
