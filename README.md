@@ -41,26 +41,26 @@ npm install --save react-onesignal
 ---
 ## Usage
 
-Initialize OneSignal with your app id:
+Initialize OneSignal with your `appId` via the `options` parameter:
 
 ```js
 import OneSignal from 'react-onesignal';
 
-OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
 ```
 
-The `initialize` function returns a promise that resolves when OneSignal is loaded.
+The `init` function returns a promise that resolves when OneSignal is loaded.
 
 **Examples**
 ```js
-await OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+await OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
 // do other stuff
 ```
 ---
 
 ```js
 const [initialized, setInitialized] = useState(false);
-OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx').then(() => {
+OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }).then(() => {
   setInitialized(true);
   OneSignal.showSlidedownPrompt().then(() => {
     // do other stuff
@@ -69,50 +69,19 @@ OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx').then(() => {
 ```
 
 ### Options
-You can pass an `options` object as the second parameter to the `initialize` function.
-
-Where options are:
-
-```ts
-interface Options {
-  safari_web_id?: string;
-  subdomainName?: string;
-  allowLocalhostAsSecureOrigin?: boolean;
-  requiresUserPrivacyConsent?: boolean;
-  persistNotification?: boolean;
-  autoResubscribe?: boolean;
-  autoRegister?: boolean;
-  notificationClickHandlerMatch?: string;
-  notificationClickHandlerAction?: string;
-  notifyButton?: {
-    enable?: boolean;
-    size?: 'small' | 'medium' | 'large';
-    position?: 'bottom-left' | 'bottom-right';
-    showCredit?: boolean;
-    prenotify?: boolean;
-      theme?: 'default' | 'inverse';
-      offset?: {
-        bottom?: string;
-        right?: string;
-        left?: string;
-      },
-      text?: {
-        [key: string]: string;
-      };
-      colors?: {
-        [key: string]: string;
-      };
-  }
-}
-```
+You can pass other [options](https://documentation.onesignal.com/docs/web-push-sdk#init) to the `init` function. Use these options to configure personalized prompt options, auto-resubscribe, and more.
 
 ---
 ## OneSignal API
-See the [OneSignal Web SDK reference](https://documentation.onesignal.com/docs/web-push-sdk) for more info.
+### Typescript
+This package includes Typescript support.
 
 ```ts
 interface OneSignal {
-  initialize(appId: string, options?: any, events?: Array<IOneSignalEvent>): Promise<void>
+  init(options?: any): Promise<void>
+  on(event: string, listener: Function): void
+  off(event: string, listener: Function): void
+  once(event: string, listener: Function): void
   isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
   showHttpPrompt(options?: AutoPromptOptions): void
   registerForPushNotifications(options?: RegisterOptions): Promise<void>
@@ -152,58 +121,19 @@ interface OneSignal {
 ### OneSignal API
 See the official [OneSignal WebSDK reference](https://documentation.onesignal.com/docs/web-push-sdk) for information on all available SDK functions.
 
-### Typescript
-This package includes Typescript support.
-
 ---
 ## Advanced Usage
 ### Events and Event Listeners
 You can also listen for native OneSignal events like `subscriptionChange`.
 
-To add an event listener to the `OneSignal.push()` array, pass an array of events to the `initialize()` function as the third parameter.
-
-Each object in the array should contain:
-* `listener` -- (optional) Default value: `'on'`.
-Some events can be listened for via multiple listeners (e.g. `.on()`, `.once()`).
-[Check the docs](https://documentation.onesignal.com/docs/web-push-sdk) to see which listeners listen for your event.
-Example: `'on'` | `'once'`
-
-* `event` -- Name of the event being listened for.
-Example: `'subscriptionChange'`
-
-* `callback` -- Callback function for event.
-Example: `(value) => { console.log(value); }`
-
-For documentation on events and event listeners, check out the [Web Push SDK docs](https://documentation.onesignal.com/docs/web-push-sdk).
-
-```js
-const events = [
-  {
-    listener: 'once',
-    event: 'subscriptionChange',
-    callback: (isSubscribed) => {
-      if (true === isSubscribed) {
-        console.log('The user subscription state is now:', isSubscribed);
-      }
-    },
-  },
-  {
-    event: 'notificationDisplay',
-    callback: (event) => {
-      console.warn('OneSignal notification displayed:', event);
-    },
-  },
-  {
-    event: 'notificationDismiss',
-    callback: (event) => {
-      console.warn('OneSignal notification dismissed:', event);
-    },
-  },
-];
-
-
-OneSignal.initialize(applicationId, options, events);
+**Example**
 ```
+OneSignal.on('subscriptionChange', function(isSubscribed) {
+  console.log("The user's subscription state is now:", isSubscribed);
+});
+```
+
+See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-push-sdk) for all available event listeners.
 
 ---
 ## Thanks
