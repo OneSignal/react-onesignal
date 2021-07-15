@@ -7,6 +7,7 @@ declare module 'react-onesignal' {
 	interface TagsObject<T> { [key: string]: T; }
 	interface IOneSignalAutoPromptOptions { force?: boolean; forceSlidedownOverNative?: boolean; isInUpdateMode?: boolean; categoryOptions?: IOneSignalCategories; }
 	interface IOneSignalCategories { positiveUpdateButton: string; negativeUpdateButton: string; savingButtonText: string; errorButtonText: string; updateMessage: string; tags: IOneSignalTagCategory[]; }
+  interface IOneSignalTagCategory { tag: string; label: string; checked?: boolean; }
 
 	interface OneSignalReact {
 		init(options?: any): Promise<void>
