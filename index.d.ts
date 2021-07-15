@@ -5,7 +5,6 @@ declare module 'react-onesignal' {
 	interface SetSMSOptions { identifierAuthHash?: string; }
 	interface SetEmailOptions { identifierAuthHash?: string; emailAuthHash?: string; }
 	interface TagsObject<T> { [key: string]: T; }
-	interface IOneSignalEvent { listener?: string; event: string; callback: (result: any) => any }
 	interface IOneSignalAutoPromptOptions { force?: boolean; forceSlidedownOverNative?: boolean; isInUpdateMode?: boolean; categoryOptions?: IOneSignalCategories; }
 	interface IOneSignalCategories { positiveUpdateButton: string; negativeUpdateButton: string; savingButtonText: string; errorButtonText: string; updateMessage: string; tags: IOneSignalTagCategory[]; }
 
