@@ -14,6 +14,9 @@ OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-
 
 You can find more information on OneSignal [here](https://onesignal.com/).
 
+### Migration Guide
+Version 2.0 was recently released. Read the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/master/MigrationGuide.md) here if you're coming from a version 1 release of the SDK.
+
 ## Contents
 - [Install](#install)
 - [Usage](#usage)
