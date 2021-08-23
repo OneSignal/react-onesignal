@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./src --ext .js,.jsx,.ts,.tsx",
     "build": "rollup -c",
-    "prepublish": "yarn run build",
+    "prepare": "yarn run build",
     "test": "yarn"
   },
   "peerDependencies": {
