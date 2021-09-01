@@ -1,11 +1,12 @@
-# React OneSignal
+<p align="center">
+  <img src="https://media.onesignal.com/cms/Website%20Layout/logo-red.svg"/>
+  <br/>
+  <br/>
+  <span style="color: grey !important">Showing web push notifications from Chrome, Safari, and Firefox</span>
+</p>
 
-[![NPM](https://img.shields.io/npm/v/react-onesignal.svg?style=flat-square)](https://www.npmjs.com/package/react-onesignal)
-[![Issues](https://img.shields.io/github/issues/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/issues)
-[![Stars](https://img.shields.io/github/stars/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/stargazers)
-[![Forks](https://img.shields.io/github/forks/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/network/members)
-[![Contributors](https://img.shields.io/github/contributors/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal/graphs/contributors)
-[![Languages](https://img.shields.io/github/languages/count/pedro-lb/react-onesignal?style=flat-square)](https://github.com/pedro-lb/react-onesignal)
+# React OneSignal
+---
 
 This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses React for its front-end codebase.
 
@@ -13,10 +14,16 @@ OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-
 
 You can find more information on OneSignal [here](https://onesignal.com/).
 
-## Notice
+### Migration Guide
+Version 2.0 was recently released. Read the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/master/MigrationGuide.md) here if you're coming from a version 1 release of the SDK.
 
-This is now the official OneSignal package for React. More details [here](https://github.com/OneSignal/react-onesignal/issues/38).
+## Contents
+- [Install](#install)
+- [Usage](#usage)
+- [API](#onesignal-api)
+- [Advanced Usage](#advanced-usage)
 
+---
 ## Install
 
 You can use `yarn` or `npm`.
@@ -34,230 +41,106 @@ yarn add react-onesignal
 npm install --save react-onesignal
 ```
 
+---
 ## Usage
 
-Simply initialize OneSignal with your token:
+Initialize OneSignal with your `appId` via the `options` parameter:
 
 ```js
 import OneSignal from 'react-onesignal';
 
-OneSignal.initialize('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', options);
+OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
 ```
 
-Where options is:
+The `init` function returns a promise that resolves when OneSignal is loaded.
+
+**Examples**
+```js
+await OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
+// do other stuff
+```
+---
+
+```js
+const [initialized, setInitialized] = useState(false);
+OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }).then(() => {
+  setInitialized(true);
+  OneSignal.showSlidedownPrompt().then(() => {
+    // do other stuff
+  });
+})
+```
+
+### Options
+You can pass other [options](https://documentation.onesignal.com/docs/web-push-sdk#init) to the `init` function. Use these options to configure personalized prompt options, auto-resubscribe, and more.
+
+---
+## OneSignal API
+### Typescript
+This package includes Typescript support.
 
 ```ts
-safari_web_id?: string;
-subdomainName?: string;
-allowLocalhostAsSecureOrigin?: boolean;
-requiresUserPrivacyConsent?: boolean;
-persistNotification?: boolean;
-autoResubscribe?: boolean;
-autoRegister?: boolean;
-notificationClickHandlerMatch?: string;
-notificationClickHandlerAction?: string;
-notifyButton?: {
-  enable?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  position?: 'bottom-left' | 'bottom-right';
-  showCredit?: boolean;
-  prenotify?: boolean;
-    theme?: 'default' | 'inverse';
-    offset?: {
-      bottom?: string;
-      right?: string;
-      left?: string;
-    },
-    text?: {
-      [key: string]: string;
-    };
-    colors?: {
-      [key: string]: string;
-    };
+interface OneSignal {
+  init(options?: any): Promise<void>
+  on(event: string, listener: Function): void
+  off(event: string, listener: Function): void
+  once(event: string, listener: Function): void
+  isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
+  showHttpPrompt(options?: AutoPromptOptions): void
+  registerForPushNotifications(options?: RegisterOptions): Promise<void>
+  setDefaultNotificationUrl(url: string): void
+  setDefaultTitle(title: string): void
+  getTags(callback?: Action<any>): void
+  sendTag(key: string,  value: any,  callback?: Action<Object>): Promise<Object | null>
+  sendTags(tags: TagsObject<any>,  callback?: Action<Object>): Promise<Object | null>
+  deleteTag(tag: string): Promise<Array<string>>
+  deleteTags(tags: Array<string>,  callback?: Action<Array<string>>): Promise<Array<string>>
+  addListenerForNotificationOpened(callback?: Action<Notification>): void
+  setSubscription(newSubscription: boolean): Promise<void>
+  showHttpPermissionRequest(options?: AutoPromptOptions): Promise<any>
+  showNativePrompt(): Promise<void>
+  showSlidedownPrompt(options?: AutoPromptOptions): Promise<void>
+  showCategorySlidedown(options?: AutoPromptOptions): Promise<void>
+  showSmsSlidedown(options?: AutoPromptOptions): Promise<void>
+  showEmailSlidedown(options?: AutoPromptOptions): Promise<void>
+  showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void>
+  getNotificationPermission(onComplete?: Function): Promise<NotificationPermission>
+  getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null>
+  getSubscription(callback?: Action<boolean>): Promise<boolean>
+  setEmail(email: string,  options?: SetEmailOptions): Promise<string|null>
+  setSMSNumber(smsNumber: string,  options?: SetSMSOptions): Promise<string | null>
+  logoutEmail(): void
+  logoutSMS(): void
+  setExternalUserId(externalUserId: string | undefined | null,  authHash?: string): Promise<void>
+  removeExternalUserId(): Promise<void>
+  getExternalUserId(): Promise<string | undefined | null>
+  provideUserConsent(consent: boolean): Promise<void>
+  getEmailId(callback?: Action<string | undefined>): Promise<string | null | undefined>
+  getSMSId(callback?: Action<string | undefined>): Promise<string | null | undefined>
+  sendOutcome(outcomeName: string,  outcomeWeight?: number | undefined): Promise<void>
 }
 ```
 
-And `OneSignal` object contains:
+### OneSignal API
+See the official [OneSignal WebSDK reference](https://documentation.onesignal.com/docs/web-push-sdk) for information on all available SDK functions.
 
-```ts
-notificationPermission: string[];
-registerForPushNotifications: () => Promise<any>;
-getNotificationPermission: () => Promise<string>;
-isPushNotificationsEnabled: () => Promise<boolean>;
-isPushNotificationsSupported: () => boolean;
-setSubscription: (unmute: boolean) => Promise<any>;
-setEmail: (email: string) => Promise<string>;
-logoutEmail: () => Promise<void>;
-getEmailId: () => Promise<string>;
-getUserId: () => Promise<string>;
-setExternalUserId: (externalUserId: string | number) => Promise<void>;
-removeExternalUserId: () => Promise<void>;
-getExternalUserId: () => Promise<any>;
-initialized: boolean;
-sendTag: (key: string, val: string) => Promise<string>;
-sendTags: (keyValues: object) => Promise<any>;
-```
-
+---
 ## Advanced Usage
-
-### Player ID
-
-Player ID is an important information on OneSignal.
-
-You can use `getPlayerId` to obtain it.
-
-```js
-// Obtains the current playerId from the browser
-const playerId = await OneSignal.getPlayerId();
-```
-
-### Notification Permission Management
-
-To manage notifications:
-
-- Use `notificationPermission` to see all possible states.
-- Use `getNotificationPermission` to check current notification permissions.
-- Use `registerForPushNotifications` to ask for notification permissions.
-
-```js
-// Check all possible permission states
-const permissions = OneSignal.notificationPermission;
-
-// Check current permission state
-const currentState = await OneSignal.getNotificationPermission();
-
-// Ask the user for notification permissions, if not granted yet
-await OneSignal.registerForPushNotifications();
-```
-
-### User Email Tracking
-
-You can use `setEmail`, `getEmailId` and `logoutEmail` to track user email.
-
-```js
-// Set email to track & notify specific users
-OneSignal.setEmail('my_email@example.com');
-
-// Check which email is configured in this browser
-const emailId = await OneSignal.getEmailId();
-
-// Remove email tracking
-OneSignal.logoutEmail();
-```
-
-### External User ID
-
-You can use `setExternalUserId`, `getExternalUserId` and `removeExternalUserId` to track external user ID.
-
-```js
-// Set external user ID
-OneSignal.setExternalUserId('your_id');
-
-// Get external user ID
-const externalUserId = await OneSignal.getExternalUserId();
-
-// Remove external user ID
-OneSignal.removeExternalUserId();
-```
-
-## Events and Event Listeners
+### Events and Event Listeners
 You can also listen for native OneSignal events like `subscriptionChange`.
 
-To add an event listener to the `OneSignal.push()` array, pass an array of events to the `ReactOneSignal.initialize()` function as the third parameter.
-
-Each object in the array should contain:
-* `listener` -- (optional) Default value: `'on'`.
-Some events can be listened for via multiple listeners (e.g. `.on()`, `.once()`).
-[Check the docs](https://documentation.onesignal.com/docs/web-push-sdk) to see which listeners listen for your event.
-Example: `'on'` | `'once'`
-
-* `event` -- Name of the event being listened for.
-Example: `'subscriptionChange'`
-
-* `callback` -- Callback function for event.
-Example: `(value) => { console.log(value); }`
-
-For documentation on events and event listeners, check out the [Web Push SDK docs](https://documentation.onesignal.com/docs/web-push-sdk).
-
-```js
-const events = [
-  {
-    listener: 'once',
-    event: 'subscriptionChange',
-    callback: (isSubscribed) => {
-      if (true === isSubscribed) {
-        console.log('The user subscription state is now:', isSubscribed);
-      }
-    },
-  },
-  {
-    event: 'notificationDisplay',
-    callback: (event) => {
-      console.warn('OneSignal notification displayed:', event);
-    },
-  },
-  {
-    event: 'notificationDismiss',
-    callback: (event) => {
-      console.warn('OneSignal notification dismissed:', event);
-    },
-  },
-];
-
-
-ReactOneSignal.initialize(applicationId, options, events);
+**Example**
+```
+OneSignal.on('subscriptionChange', function(isSubscribed) {
+  console.log("The user's subscription state is now:", isSubscribed);
+});
 ```
 
-### OneSignal Tags and Audience Segmenting
+See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-push-sdk) for all available event listeners.
 
-You can use `sendTag` and `sendTags` to set OneSignal tags for segment filtering.
-```js
-// Send a tag to OneSignal for the current player
-OneSignal.sendTag('tag', 'tagValue');
-
-// Send multiple tags to OneSignal for the current player
-const keyValues = {
-  'tag1': 'value1',
-  'tag2': 'value2',
-  'tag3': 'value3',
-};
-OneSignal.sendTags(keyValues);
-```
-
-### Setup hook
-
-To avoid error due to OneSignal not initialized, you can use useOneSignalSetup hook, passing a callback to be called when OneSignal is ready
-
-```ts
-import OneSignal, { useOneSignalSetup } from 'react-onesignal';
-
-type AppProps = {
-  user: {
-    id: string;
-    Email: string;
-  };
-};
-
-function App(props: AppProps) {
-  const { user } = props;
-
-  useOneSignalSetup(() => {
-    OneSignal.setEmail(user.Email);
-    OneSignal.setExternalUserId(user.id);
-  });
-}
-```
-
-## Contributing
-
-Pull requests are welcome! If you have any feedback, issue or suggestion, feel free to open [a new issue](https://github.com/pedro-lb/react-onesignal/issues/new) so we can talk about it 💬.
-
-## Made possible by
-
-<a href="https://github.com/pedro-lb/react-onesignal/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=pedro-lb/react-onesignal" />
+---
+## Thanks
+Special thanks to [pedro-lb](https://github.com/pedro-lb) and others for work on the project this package is [based on](https://github.com/pedro-lb/react-onesignal).
+<a href="https://github.com/onesignal/react-onesignal/graphs/contributors">
+  <img src="https://user-images.githubusercontent.com/11739227/119415383-1d354700-bcb7-11eb-946d-01c40cd07010.png" />
 </a>
-
-## License
-
-MIT © [pedro-lb](https://github.com/pedro-lb)
