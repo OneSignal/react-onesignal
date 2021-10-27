@@ -123,6 +123,30 @@ function once(event, listener) {
   });
 };
 
+function isPushNotificationsSupported(callback) {
+  return new Promise((resolve, reject) => {
+    const oneSignal = window["OneSignal"] || null;
+    if (!oneSignal) {
+      reactOneSignalFunctionQueue.push({
+        name: "isPushNotificationsSupported",
+        args: arguments,
+        promiseResolver: resolve,
+      });
+      return;
+    }
+
+    try {
+      OneSignal.push(() => {
+        OneSignal.isPushNotificationsSupported(callback)
+          .then((value) => resolve(value))
+          .catch((error) => reject(error));
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 function isPushNotificationsEnabled(callback) {
   return new Promise((resolve, reject) => {
     const oneSignal = window["OneSignal"] || null;
@@ -920,6 +944,7 @@ const OneSignalReact = {
 	on,
 	off,
 	once,
+  isPushNotificationsSupported,
 	isPushNotificationsEnabled,
 	showHttpPrompt,
 	registerForPushNotifications,

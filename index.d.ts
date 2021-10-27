@@ -14,6 +14,7 @@ declare module 'react-onesignal' {
 		on(event: string, listener: Function): void
 		off(event: string, listener: Function): void
 		once(event: string, listener: Function): void
+		isPushNotificationsSupported(callback?: Action<boolean>): Promise<boolean>
 		isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
 		showHttpPrompt(options?: AutoPromptOptions): void
 		registerForPushNotifications(options?: RegisterOptions): Promise<void>
