@@ -1,6 +1,6 @@
 {
   "name": "react-onesignal",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "React OneSignal Module: Make it easy to integrate OneSignal with your React App!",
   "author": "rgomezp",
   "contributors": [{ "name": "Rodrigo Gomez-Palacio" }, { "name": "Pedro Bini" }],
@@ -10,7 +10,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
-  "types": "./index.d.ts",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
