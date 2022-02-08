@@ -1,17 +1,45 @@
 const ONESIGNAL_SDK_ID = 'onesignal-sdk';
 const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
-const ONESIGNAL_NOT_SETUP_ERROR = 'OneSignal is not setup correctly.';
 const reactOneSignalFunctionQueue = [];
-const MAX_TIMEOUT = 30;
 
+// true if the script is successfully loaded from CDN.
 let isOneSignalInitialized = false;
+// true if the script fails to load from CDN. A separate flag is necessary
+// to disambiguate between a CDN load failure and a delayed call to
+// OneSignal#init.
+let isOneSignalScriptFailed = false;
 
-const injectScript = () => {
-  const script = document.createElement('script');
-  script.id = ONESIGNAL_SDK_ID;
-  script.src = ONE_SIGNAL_SCRIPT_SRC;
-  script.async = true;
-  document.head.appendChild(script);
+const doesOneSignalExist = () => {
+  if (window["OneSignal"]) {
+    return true;
+  }
+  return false;
+}
+
+const handleOnLoad = (resolve: () => void, options: IInitObject) => {
+  isOneSignalInitialized = true;
+
+  // OneSignal is assumed to be loaded correctly because this method
+  // is called after the script is successfully loaded by CDN, but
+  // just in case.
+  window["OneSignal"] = window["OneSignal"] || []
+
+  window["OneSignal"].push(() => {
+    window["OneSignal"].init(options);
+  });
+
+  window["OneSignal"].push(() => {
+    processQueuedOneSignalFunctions();
+    resolve();
+  });
+}
+
+const handleOnError = (resolve: () => void) => {
+  isOneSignalScriptFailed = true;
+  // Ensure that any unresolved functions are cleared from the queue,
+  // even in the event of a CDN load failure.
+  processQueuedOneSignalFunctions();
+  resolve();
 }
 
 const processQueuedOneSignalFunctions = () => {
@@ -28,21 +56,9 @@ const processQueuedOneSignalFunctions = () => {
   });
 }
 
-const doesOneSignalExist = () => {
-  if (window["OneSignal"]) {
-    return true;
-  }
-  return false;
-}
-
-const setupOneSignalIfMissing = () => {
-  if (!doesOneSignalExist()) {
-    window["OneSignal"] = window["OneSignal"] || [];
-  }
-}
-
 const init = (options: IInitObject) => new Promise<void>(resolve => {
   if (isOneSignalInitialized) {
+    resolve();
     return;
   }
 
@@ -50,29 +66,29 @@ const init = (options: IInitObject) => new Promise<void>(resolve => {
     throw new Error('You need to provide your OneSignal appId.');
   }
   if (!document) {
+    resolve();
     return;
   }
-  injectScript();
-  setupOneSignalIfMissing();
-  window["OneSignal"].push(() => {
-    window["OneSignal"].init(options);
-  });
 
-  const timeout = setTimeout(() => {
-    console.error(ONESIGNAL_NOT_SETUP_ERROR);
-  }, MAX_TIMEOUT * 1_000);
+  const script = document.createElement('script');
+  script.id = ONESIGNAL_SDK_ID;
+  script.src = ONE_SIGNAL_SCRIPT_SRC;
+  script.async = true;
 
+  script.onload = () => {
+    handleOnLoad(resolve, options);
+  };
 
-  window["OneSignal"].push(() => {
-    clearTimeout(timeout);
-    processQueuedOneSignalFunctions();
-    resolve();
-  });
+  // Always resolve whether or not the script is successfully initialized.
+  // This is important for users who may block cdn.onesignal.com w/ adblock.
+  script.onerror = () => {
+    handleOnError(resolve);
+  }
 
-  isOneSignalInitialized = true;
+  document.head.appendChild(script);
 });
 
-interface Action<T>{ (item: T): void; }
+type Action<T> = (item: T) => void;
 interface AutoPromptOptions { force?: boolean; forceSlidedownOverNative?: boolean; slidedownPromptOptions?: IOneSignalAutoPromptOptions; }
 interface RegisterOptions { modalPrompt?: boolean; httpPermissionRequest?: boolean; slidedown?: boolean; autoAccept?: boolean }
 interface SetSMSOptions { identifierAuthHash?: string; }
@@ -82,16 +98,15 @@ interface IOneSignalAutoPromptOptions { force?: boolean; forceSlidedownOverNativ
 interface IOneSignalCategories { positiveUpdateButton: string; negativeUpdateButton: string; savingButtonText: string; errorButtonText: string; updateMessage: string; tags: IOneSignalTagCategory[]; }
 interface IOneSignalTagCategory { tag: string; label: string; checked?: boolean; }
 
-
 interface IInitObject {
   appId: string;
   subdomainName?: string;
   requiresUserPrivacyConsent?: boolean;
-  promptOptions?: Object;
-  welcomeNotification?: Object;
-  notifyButton?: Object;
+  promptOptions?: object;
+  welcomeNotification?: object;
+  notifyButton?: object;
   persistNotification?: boolean;
-  webhooks?: Object;
+  webhooks?: object;
   autoResubscribe?: boolean;
   autoRegister?: boolean;
   notificationClickHandlerMatch?: string;
@@ -100,14 +115,15 @@ interface IInitObject {
   serviceWorkerPath?: string;
   serviceWorkerUpdaterPath?: string;
   path?: string;
+  allowLocalhostAsSecureOrigin?: boolean;
   [key: string]: any;
 }
 
 interface IOneSignal {
-	init(options?: IInitObject): Promise<void>
-	on(event: string, listener: Function): void
-	off(event: string, listener: Function): void
-	once(event: string, listener: Function): void
+	init(options: IInitObject): Promise<void>
+	on(event: string, listener: () => void): void
+	off(event: string, listener: () => void): void
+	once(event: string, listener: () => void): void
 	isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
 	showHttpPrompt(options?: AutoPromptOptions): Promise<void>
 	registerForPushNotifications(options?: RegisterOptions): Promise<void>
@@ -127,7 +143,7 @@ interface IOneSignal {
 	showSmsSlidedown(options?: AutoPromptOptions): Promise<void>
 	showEmailSlidedown(options?: AutoPromptOptions): Promise<void>
 	showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void>
-	getNotificationPermission(onComplete?: Function): Promise<NotificationPermission>
+	getNotificationPermission(onComplete?: Action<NotificationPermission>): Promise<NotificationPermission>
 	getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null>
 	getSubscription(callback?: Action<boolean>): Promise<boolean>
 	setEmail(email: string, options?: SetEmailOptions): Promise<string|null>
@@ -146,10 +162,10 @@ interface IOneSignal {
 
 
 
-  function on(event: string, listener: Function): void {
+  function on(event: string, listener: () => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
-        name: "on",
+        name: 'on',
         args: arguments,
       });
       return;
@@ -158,12 +174,12 @@ interface IOneSignal {
     window["OneSignal"].push(() => {
       window["OneSignal"].on(event, listener)
     });
-  };
+  }
 
-  function off(event: string, listener: Function): void {
+  function off(event: string, listener: () => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
-        name: "off",
+        name: 'off',
         args: arguments,
       });
       return;
@@ -172,12 +188,12 @@ interface IOneSignal {
     window["OneSignal"].push(() => {
       window["OneSignal"].off(event, listener)
     });
-  };
+  }
 
-  function once(event: string, listener: Function): void {
+  function once(event: string, listener: () => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
-        name: "once",
+        name: 'once',
         args: arguments,
       });
       return;
@@ -186,13 +202,18 @@ interface IOneSignal {
     window["OneSignal"].push(() => {
       window["OneSignal"].once(event, listener)
     });
-  };
+  }
 
   function isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "isPushNotificationsEnabled",
+          name: 'isPushNotificationsEnabled',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -209,13 +230,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showHttpPrompt(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showHttpPrompt",
+          name: 'showHttpPrompt',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -232,13 +258,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function registerForPushNotifications(options?: RegisterOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "registerForPushNotifications",
+          name: 'registerForPushNotifications',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -255,13 +286,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setDefaultNotificationUrl(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setDefaultNotificationUrl",
+          name: 'setDefaultNotificationUrl',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -278,13 +314,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setDefaultTitle(title: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setDefaultTitle",
+          name: 'setDefaultTitle',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -301,13 +342,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getTags(callback?: Action<any>): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getTags",
+          name: 'getTags',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -324,13 +370,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function sendTag(key: string, value: any, callback?: Action<Object>): Promise<Object | null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "sendTag",
+          name: 'sendTag',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -347,13 +398,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function sendTags(tags: TagsObject<any>, callback?: Action<Object>): Promise<Object | null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "sendTags",
+          name: 'sendTags',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -370,13 +426,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function deleteTag(tag: string): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "deleteTag",
+          name: 'deleteTag',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -393,13 +454,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function deleteTags(tags: Array<string>, callback?: Action<Array<string>>): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "deleteTags",
+          name: 'deleteTags',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -416,13 +482,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function addListenerForNotificationOpened(callback?: Action<Notification>): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "addListenerForNotificationOpened",
+          name: 'addListenerForNotificationOpened',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -439,13 +510,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setSubscription(newSubscription: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setSubscription",
+          name: 'setSubscription',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -462,13 +538,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showHttpPermissionRequest(options?: AutoPromptOptions): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showHttpPermissionRequest",
+          name: 'showHttpPermissionRequest',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -485,13 +566,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showNativePrompt(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showNativePrompt",
+          name: 'showNativePrompt',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -508,13 +594,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showSlidedownPrompt(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showSlidedownPrompt",
+          name: 'showSlidedownPrompt',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -531,13 +622,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showCategorySlidedown(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showCategorySlidedown",
+          name: 'showCategorySlidedown',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -554,13 +650,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showSmsSlidedown(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showSmsSlidedown",
+          name: 'showSmsSlidedown',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -577,13 +678,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showEmailSlidedown(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showEmailSlidedown",
+          name: 'showEmailSlidedown',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -600,13 +706,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "showSmsAndEmailSlidedown",
+          name: 'showSmsAndEmailSlidedown',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -623,13 +734,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
-  function getNotificationPermission(onComplete?: Function): Promise<NotificationPermission> {
+  function getNotificationPermission(onComplete?: Action<NotificationPermission>): Promise<NotificationPermission> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getNotificationPermission",
+          name: 'getNotificationPermission',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -646,13 +762,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getUserId",
+          name: 'getUserId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -669,13 +790,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getSubscription(callback?: Action<boolean>): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getSubscription",
+          name: 'getSubscription',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -692,13 +818,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setEmail(email: string, options?: SetEmailOptions): Promise<string|null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setEmail",
+          name: 'setEmail',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -715,13 +846,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setSMSNumber(smsNumber: string, options?: SetSMSOptions): Promise<string | null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setSMSNumber",
+          name: 'setSMSNumber',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -738,13 +874,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function logoutEmail(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "logoutEmail",
+          name: 'logoutEmail',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -761,13 +902,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function logoutSMS(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "logoutSMS",
+          name: 'logoutSMS',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -784,13 +930,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function setExternalUserId(externalUserId: string | undefined | null, authHash?: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "setExternalUserId",
+          name: 'setExternalUserId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -807,13 +958,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function removeExternalUserId(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "removeExternalUserId",
+          name: 'removeExternalUserId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -830,13 +986,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getExternalUserId(): Promise<string | undefined | null> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getExternalUserId",
+          name: 'getExternalUserId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -853,13 +1014,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function provideUserConsent(consent: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "provideUserConsent",
+          name: 'provideUserConsent',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -876,13 +1042,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getEmailId(callback?: Action<string | undefined>): Promise<string | null | undefined> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getEmailId",
+          name: 'getEmailId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -899,13 +1070,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function getSMSId(callback?: Action<string | undefined>): Promise<string | null | undefined> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "getSMSId",
+          name: 'getSMSId',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -922,13 +1098,18 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
   function sendOutcome(outcomeName: string, outcomeWeight?: number | undefined): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (isOneSignalScriptFailed) {
+        resolve();
+        return;
+      }
+
       if (!doesOneSignalExist()) {
         reactOneSignalFunctionQueue.push({
-          name: "sendOutcome",
+          name: 'sendOutcome',
           args: arguments,
           promiseResolver: resolve,
         });
@@ -945,7 +1126,7 @@ interface IOneSignal {
         reject(error);
       }
     });
-  };
+  }
 
 const OneSignalReact: IOneSignal = {
 	init,
