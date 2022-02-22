@@ -34,12 +34,12 @@ const handleOnLoad = (resolve: () => void, options: IInitObject) => {
   });
 }
 
-const handleOnError = (resolve: () => void) => {
+const handleOnError = (reject: () => void) => {
   isOneSignalScriptFailed = true;
   // Ensure that any unresolved functions are cleared from the queue,
   // even in the event of a CDN load failure.
   processQueuedOneSignalFunctions();
-  resolve();
+  reject();
 }
 
 const processQueuedOneSignalFunctions = () => {
@@ -56,7 +56,7 @@ const processQueuedOneSignalFunctions = () => {
   });
 }
 
-const init = (options: IInitObject) => new Promise<void>(resolve => {
+const init = (options: IInitObject) => new Promise<void>((resolve, reject) => {
   if (isOneSignalInitialized) {
     resolve();
     return;
@@ -79,10 +79,10 @@ const init = (options: IInitObject) => new Promise<void>(resolve => {
     handleOnLoad(resolve, options);
   };
 
-  // Always resolve whether or not the script is successfully initialized.
-  // This is important for users who may block cdn.onesignal.com w/ adblock.
+  // Reject promise when the script is not successfully initialized.
+  // This is important for users who may block cdn.onesignal.com w/ adblock and want to understand if init was actually successful or not
   script.onerror = () => {
-    handleOnError(resolve);
+    handleOnError(reject);
   }
 
   document.head.appendChild(script);
