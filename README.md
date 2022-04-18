@@ -99,43 +99,43 @@ This package includes Typescript support.
 
 ```ts
 interface OneSignal {
-  init(options?: any): Promise<void>
-  on(event: string, listener: Function): void
-  off(event: string, listener: Function): void
-  once(event: string, listener: Function): void
-  isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
-  showHttpPrompt(options?: AutoPromptOptions): void
-  registerForPushNotifications(options?: RegisterOptions): Promise<void>
-  setDefaultNotificationUrl(url: string): void
-  setDefaultTitle(title: string): void
-  getTags(callback?: Action<any>): void
-  sendTag(key: string,  value: any,  callback?: Action<Object>): Promise<Object | null>
-  sendTags(tags: TagsObject<any>,  callback?: Action<Object>): Promise<Object | null>
-  deleteTag(tag: string): Promise<Array<string>>
-  deleteTags(tags: Array<string>,  callback?: Action<Array<string>>): Promise<Array<string>>
-  addListenerForNotificationOpened(callback?: Action<Notification>): void
-  setSubscription(newSubscription: boolean): Promise<void>
-  showHttpPermissionRequest(options?: AutoPromptOptions): Promise<any>
-  showNativePrompt(): Promise<void>
-  showSlidedownPrompt(options?: AutoPromptOptions): Promise<void>
-  showCategorySlidedown(options?: AutoPromptOptions): Promise<void>
-  showSmsSlidedown(options?: AutoPromptOptions): Promise<void>
-  showEmailSlidedown(options?: AutoPromptOptions): Promise<void>
-  showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void>
-  getNotificationPermission(onComplete?: Function): Promise<NotificationPermission>
-  getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null>
-  getSubscription(callback?: Action<boolean>): Promise<boolean>
-  setEmail(email: string,  options?: SetEmailOptions): Promise<string|null>
-  setSMSNumber(smsNumber: string,  options?: SetSMSOptions): Promise<string | null>
-  logoutEmail(): void
-  logoutSMS(): void
-  setExternalUserId(externalUserId: string | undefined | null,  authHash?: string): Promise<void>
-  removeExternalUserId(): Promise<void>
-  getExternalUserId(): Promise<string | undefined | null>
-  provideUserConsent(consent: boolean): Promise<void>
-  getEmailId(callback?: Action<string | undefined>): Promise<string | null | undefined>
-  getSMSId(callback?: Action<string | undefined>): Promise<string | null | undefined>
-  sendOutcome(outcomeName: string,  outcomeWeight?: number | undefined): Promise<void>
+  init(options: IInitObject): Promise<void>;
+  on(event: string, listener: () => void): void;
+  off(event: string, listener: () => void): void;
+  once(event: string, listener: () => void): void;
+  isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>;
+  showHttpPrompt(options?: AutoPromptOptions): Promise<void>;
+  registerForPushNotifications(options?: RegisterOptions): Promise<void>;
+  setDefaultNotificationUrl(url: string): Promise<void>;
+  setDefaultTitle(title: string): Promise<void>;
+  getTags(callback?: Action<any>): Promise<void>;
+  sendTag(key: string, value: any, callback?: Action<Object>): Promise<Object | null>;
+  sendTags(tags: TagsObject<any>, callback?: Action<Object>): Promise<Object | null>;
+  deleteTag(tag: string): Promise<Array<string>>;
+  deleteTags(tags: Array<string>, callback?: Action<Array<string>>): Promise<Array<string>>;
+  addListenerForNotificationOpened(callback?: Action<Notification>): Promise<void>;
+  setSubscription(newSubscription: boolean): Promise<void>;
+  showHttpPermissionRequest(options?: AutoPromptOptions): Promise<any>;
+  showNativePrompt(): Promise<void>;
+  showSlidedownPrompt(options?: AutoPromptOptions): Promise<void>;
+  showCategorySlidedown(options?: AutoPromptOptions): Promise<void>;
+  showSmsSlidedown(options?: AutoPromptOptions): Promise<void>;
+  showEmailSlidedown(options?: AutoPromptOptions): Promise<void>;
+  showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void>;
+  getNotificationPermission(onComplete?: Action<NotificationPermission>): Promise<NotificationPermission>;
+  getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null>;
+  getSubscription(callback?: Action<boolean>): Promise<boolean>;
+  setEmail(email: string, options?: SetEmailOptions): Promise<string | null>;
+  setSMSNumber(smsNumber: string, options?: SetSMSOptions): Promise<string | null>;
+  logoutEmail(): Promise<void>;
+  logoutSMS(): Promise<void>;
+  setExternalUserId(externalUserId: string | undefined | null, authHash?: string): Promise<void>;
+  removeExternalUserId(): Promise<void>;
+  getExternalUserId(): Promise<string | undefined | null>;
+  provideUserConsent(consent: boolean): Promise<void>;
+  getEmailId(callback?: Action<string | undefined>): Promise<string | null | undefined>;
+  getSMSId(callback?: Action<string | undefined>): Promise<string | null | undefined>;
+  sendOutcome(outcomeName: string, outcomeWeight?: number | undefined): Promise<void>;
 }
 ```
 
@@ -145,10 +145,18 @@ See the official [OneSignal WebSDK reference](https://documentation.onesignal.co
 ---
 ## Advanced Usage
 ### Events and Event Listeners
-You can also listen for native OneSignal events like `subscriptionChange`.
+Use listeners to react to OneSignal-related events:
+
+* `subscriptionChange`
+* `permissionPromptDisplay`
+* `notificationPermissionChange`
+* `popoverShown`
+* `customPromptClick`
+* `notificationDisplay`
+* `notificationDismiss`
 
 **Example**
-```
+```js
 OneSignal.on('subscriptionChange', function(isSubscribed) {
   console.log("The user's subscription state is now:", isSubscribed);
 });
@@ -157,8 +165,34 @@ OneSignal.on('subscriptionChange', function(isSubscribed) {
 See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-push-sdk) for all available event listeners.
 
 ---
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/OneSignal/react-onesignal/issues).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## OneSignal
+
+* [Website](https://onesignal.com)
+* Twitter: [@onesignal](https://twitter.com/onesignal)
+* Github: [@OneSignal](https://github.com/OneSignal)
+* LinkedIn: [@onesignal](https://linkedin.com/company/onesignal)
+
+## Discord
+Reach out to us via our [Discord server](https://discord.com/invite/EP7gf6Uz7G)!
+
+## 📝 License
+
+Copyright © 2022 [OneSignal](https://github.com/OneSignal).<br />
+This project is [Modified MIT](https://github.com/OneSignal/react-onesignal/blob/master/LICENSE) licensed.
+
 ## Thanks
 Special thanks to [pedro-lb](https://github.com/pedro-lb) and others for work on the project this package is [based on](https://github.com/pedro-lb/react-onesignal).
 <a href="https://github.com/onesignal/react-onesignal/graphs/contributors">
   <img src="https://user-images.githubusercontent.com/11739227/119415383-1d354700-bcb7-11eb-946d-01c40cd07010.png" />
 </a>
+
+Enjoy!
