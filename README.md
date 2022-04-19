@@ -28,7 +28,6 @@ Version 2.0 was recently released. Read the [Migration Guide](https://github.com
 
 You can use `yarn` or `npm`.
 
-
 ### Yarn
 
 ```bash
@@ -163,6 +162,10 @@ OneSignal.on('subscriptionChange', function(isSubscribed) {
 ```
 
 See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-push-sdk) for all available event listeners.
+
+## Troubleshooting
+### `window.OneSignal already defined as 'object'!`
+You will get this error if you initialize twice. Make sure you are only initializing one time. When wrapped with `React.StrictMode`, your app might be rendering twice.
 
 ---
 
