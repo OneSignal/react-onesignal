@@ -167,6 +167,9 @@ See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/we
 ### `window.OneSignal already defined as 'object'!`
 You will get this error if you initialize twice. Make sure you are only initializing one time. When wrapped with `React.StrictMode`, your app might be rendering twice.
 
+## Example App
+This repo includes an `example` React application implementing OneSignal. It was created using `create-react-app`. The app uses this repository's root level directory as the `react-onesignal` package and will bundle any changes on every run.
+
 ---
 
 ## 🤝 Contributing
