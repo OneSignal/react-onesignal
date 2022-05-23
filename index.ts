@@ -121,9 +121,9 @@ interface IInitObject {
 
 interface IOneSignal {
 	init(options: IInitObject): Promise<void>
-	on(event: string, listener: () => void): void
-	off(event: string, listener: () => void): void
-	once(event: string, listener: () => void): void
+	on(event: string, listener: (eventData?: any) => void): void
+	off(event: string, listener: (eventData?: any) => void): void
+	once(event: string, listener: (eventData?: any) => void): void
 	isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>
 	showHttpPrompt(options?: AutoPromptOptions): Promise<void>
 	registerForPushNotifications(options?: RegisterOptions): Promise<void>
@@ -162,7 +162,7 @@ interface IOneSignal {
 
 
 
-  function on(event: string, listener: () => void): void {
+  function on(event: string, listener: (eventData?: any) => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
         name: 'on',
@@ -176,7 +176,7 @@ interface IOneSignal {
     });
   }
 
-  function off(event: string, listener: () => void): void {
+  function off(event: string, listener: (eventData?: any) => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
         name: 'off',
@@ -190,7 +190,7 @@ interface IOneSignal {
     });
   }
 
-  function once(event: string, listener: () => void): void {
+  function once(event: string, listener: (eventData?: any) => void): void {
     if (!doesOneSignalExist()) {
       reactOneSignalFunctionQueue.push({
         name: 'once',
