@@ -1,4 +1,3 @@
-
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
@@ -20,6 +19,3 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# NPM README file
-package/README.md
