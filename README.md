@@ -1,14 +1,23 @@
-<p align="center">
-  <img src="https://media.onesignal.com/cms/Website%20Layout/logo-red.svg"/>
-  <br/>
-  <br/>
-  <span style="color: grey !important">Showing web push notifications from Chrome, Safari, and Firefox</span>
+<h1 align="center">Welcome to react-onesignal 👋</h1>
+<p>
+  <a href="https://www.npmjs.com/package/react-onesignal" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/react-onesignal.svg">
+  </a>
+  <a href="https://github.com/OneSignal/react-onesignal#readme" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="https://github.com/OneSignal/react-onesignal/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
+  <a href="https://twitter.com/onesignal" target="_blank">
+    <img alt="Twitter: onesignal" src="https://img.shields.io/twitter/follow/onesignal.svg?style=social" />
+  </a>
 </p>
 
-# React OneSignal
----
+> This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses React for its front-end codebase.
 
-This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses React for its front-end codebase.
+* 🏠 [Homepage](https://github.com/OneSignal/react-onesignal#readme)
+* 🖤 [npm](https://www.npmjs.com/package/react-onesignal)
 
 OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-App Messaging. It is trusted by 800k businesses to send 5 billion Push Notifications per day.
 
@@ -202,4 +211,3 @@ Special thanks to [pedro-lb](https://github.com/pedro-lb) and others for work on
 </a>
 
 Enjoy!
-test
