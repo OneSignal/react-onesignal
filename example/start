@@ -1,0 +1,2 @@
+HTTPS=true SSL_CRT_FILE=dev-ssl.crt SSL_KEY_FILE=dev-ssl.key yarn start
+
