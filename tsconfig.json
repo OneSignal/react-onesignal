@@ -20,6 +20,6 @@
     "downlevelIteration": true,
     "skipLibCheck": true
   },
-  "include": ["index.ts"],
+  "include": ["index.ts", "types.d.ts"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
 }
