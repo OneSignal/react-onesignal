@@ -99,7 +99,7 @@ const init = (options: IInitObject): Promise<void> => {
   }
 
   return new Promise<void>((resolve) => {
-    window['OneSignalDeferred'].push((OneSignal) => {
+    window.OneSignalDeferred?.push((OneSignal) => {
       OneSignal.init(options).then(() => {
         isOneSignalInitialized = true;
         resolve();
