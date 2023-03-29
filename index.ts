@@ -15,6 +15,7 @@ addSDKScript();
 declare global {
   interface Window {
     OneSignalDeferred?: OneSignalDeferredLoadedCallback[];
+    OneSignal?: IOneSignalOneSignal;
     safari?: {
       pushNotification: any;
     };
@@ -143,58 +144,61 @@ interface IInitObject {
 }
 
 interface IOneSignalOneSignal {
-	login(externalId: string, jwtToken?: string): Promise<void>
-	logout(): Promise<void>
-	init(options: IInitObject): Promise<void>
-	setConsentGiven(consent: boolean): Promise<void>
-	setConsentRequired(requiresConsent: boolean): Promise<void>
 	Slidedown: IOneSignalSlidedown;
 	Notifications: IOneSignalNotifications;
 	Session: IOneSignalSession;
 	User: IOneSignalUser;
 	Debug: IOneSignalDebug;
+	login(externalId: string, jwtToken?: string): Promise<void>;
+	logout(): Promise<void>;
+	init(options: IInitObject): Promise<void>;
+	setConsentGiven(consent: boolean): Promise<void>;
+	setConsentRequired(requiresConsent: boolean): Promise<void>;
 }
 interface IOneSignalNotifications {
-	setDefaultUrl(url: string): Promise<void>
-	setDefaultTitle(title: string): Promise<void>
-	isPushSupported(): boolean
-	getPermissionStatus(onComplete: Action<NotificationPermission>): Promise<NotificationPermission>
-	requestPermission(): Promise<void>
-	addEventListener(event: NotificationEventName, listener: (obj: any) => void): void
-	removeEventListener(event: NotificationEventName, listener: (obj: any) => void): void
+	setDefaultUrl(url: string): Promise<void>;
+	setDefaultTitle(title: string): Promise<void>;
+	isPushSupported(): boolean;
+	getPermissionStatus(onComplete: Action<NotificationPermission>): Promise<NotificationPermission>;
+	requestPermission(): Promise<void>;
+	addEventListener(event: NotificationEventName, listener: (obj: any) => void): void;
+	removeEventListener(event: NotificationEventName, listener: (obj: any) => void): void;
 }
 interface IOneSignalSlidedown {
-	promptPush(options?: AutoPromptOptions): Promise<void>
-	promptPushCategories(options?: AutoPromptOptions): Promise<void>
-	promptSms(options?: AutoPromptOptions): Promise<void>
-	promptEmail(options?: AutoPromptOptions): Promise<void>
-	promptSmsAndEmail(options?: AutoPromptOptions): Promise<void>
-	addEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void
-	removeEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void
+	promptPush(options?: AutoPromptOptions): Promise<void>;
+	promptPushCategories(options?: AutoPromptOptions): Promise<void>;
+	promptSms(options?: AutoPromptOptions): Promise<void>;
+	promptEmail(options?: AutoPromptOptions): Promise<void>;
+	promptSmsAndEmail(options?: AutoPromptOptions): Promise<void>;
+	addEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void;
+	removeEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void;
 }
 interface IOneSignalDebug {
-	setLogLevel(logLevel: string): void
+	setLogLevel(logLevel: string): void;
 }
 interface IOneSignalSession {
-	sendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void>
-	sendUniqueOutcome(outcomeName: string): Promise<void>
+	sendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void>;
+	sendUniqueOutcome(outcomeName: string): Promise<void>;
 }
 interface IOneSignalUser {
-	addAlias(label: string, id: string): void
-	addAliases(aliases: { [key: string]: string }): void
-	removeAlias(label: string): void
-	removeAliases(labels: string[]): void
-	addEmail(email: string): void
-	removeEmail(email: string): void
-	addSms(smsNumber: string): void
-	removeSms(smsNumber: string): void
 	PushSubscription: IOneSignalPushSubscription;
+	addAlias(label: string, id: string): void;
+	addAliases(aliases: { [key: string]: string }): void;
+	removeAlias(label: string): void;
+	removeAliases(labels: string[]): void;
+	addEmail(email: string): void;
+	removeEmail(email: string): void;
+	addSms(smsNumber: string): void;
+	removeSms(smsNumber: string): void;
 }
 interface IOneSignalPushSubscription {
-	optIn(): Promise<void>
-	optOut(): Promise<void>
-	addEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void
-	removeEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void
+	id: string | null | undefined;
+	token: string | null | undefined;
+	optedIn: boolean | undefined;
+	optIn(): Promise<void>;
+	optOut(): Promise<void>;
+	addEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void;
+	removeEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void;
 }
 
 function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
@@ -601,6 +605,9 @@ function debugSetLogLevel(logLevel: string): void {
   });
 }
 const PushSubscriptionNamespace: IOneSignalPushSubscription = {
+	get id(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.id },
+	get token(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.token },
+	get optedIn(): boolean | undefined { return window.OneSignal?.User?.PushSubscription?.optedIn },
 	optIn: pushSubscriptionOptIn,
 	optOut: pushSubscriptionOptOut,
 	addEventListener: pushSubscriptionAddEventListener,
