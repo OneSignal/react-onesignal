@@ -8,7 +8,7 @@ let isOneSignalInitialized = false;
 // OneSignal#init.
 let isOneSignalScriptFailed = false;
 
-window.OneSignalDeferred = window.OneSignalDeferred || [];
+window.OneSignalDeferred = window?.OneSignalDeferred || [];
 
 addSDKScript();
 
@@ -190,6 +190,10 @@ interface IOneSignalUser {
 	removeEmail(email: string): void;
 	addSms(smsNumber: string): void;
 	removeSms(smsNumber: string): void;
+	addTag(key: string, value: string): void;
+	addTags(tags: { [key: string]: string }): void;
+	removeTag(key: string): void;
+	removeTags(keys: string[]): void;
 }
 interface IOneSignalPushSubscription {
 	id: string | null | undefined;
@@ -551,6 +555,30 @@ function userRemoveSms(smsNumber: string): void {
   });
 }
 
+function userAddTag(key: string, value: string): void {
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.addTag(key, value)
+  });
+}
+
+function userAddTags(tags: { [key: string]: string }): void {
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.addTags(tags)
+  });
+}
+
+function userRemoveTag(key: string): void {
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.removeTag(key)
+  });
+}
+
+function userRemoveTags(keys: string[]): void {
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.removeTags(keys)
+  });
+}
+
 function pushSubscriptionOptIn(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
@@ -623,6 +651,10 @@ const UserNamespace: IOneSignalUser = {
 	removeEmail: userRemoveEmail,
 	addSms: userAddSms,
 	removeSms: userRemoveSms,
+	addTag: userAddTag,
+	addTags: userAddTags,
+	removeTag: userRemoveTag,
+	removeTags: userRemoveTags,
 	PushSubscription: PushSubscriptionNamespace,
 };
 
