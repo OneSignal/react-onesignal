@@ -111,15 +111,17 @@ Example:
 await OneSignal.Notifications.requestPermission();
 ```
 
-| Sync/Async | Function Name         | Description                                                                                                                                                                             | Argument List                                                                                                                                                    |
-| ---------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `async`    | `setDefaultUrl`       | Sets the default URL for notifications.                                                                                                                                                 | `url` (string)                                                                                                                                                   |
-| `async`    | `setDefaultTitle`     | Sets the default title for notifications.                                                                                                                                               | `title` (string)                                                                                                                                                 |
-| `sync`     | `isPushSupported`     | Returns true if the current browser supports web push.                                                                                                                                  |                                                                                                                                                                  |
-| `async`    | `getPermissionStatus` | Returns the browser's current notification permission.                                                                                                                                  | `onComplete` (Action<NotificationPermission>)                                                                                                                    |
-| `async`    | `requestPermission`   | Requests push notifications permission via the native browser prompt.                                                                                                                   |                                                                                                                                                                  |
-| `sync`     | `addEventListener`    | Adds an event listener for the following events:<br><br>- `click`<br>- `willDisplay`<br>- `dismiss`<br>- `permissionPromptDisplay`<br>- `permissionChange`*<br> * argument type: bool | - `<event>` (string)<br>- `(arg: <type>) => {}` (callback)                                                                                                       |
-| `sync`     | `removeEventListener` | Removes the event listener.                                                                                                                                                             | `() => {}` (the event listener you want to remove)                                                                                                               |
+
+| Sync/Async | Function / Property       | Description                                                                                                                                                                             | Argument List                                                                                                                                                    |
+| ---------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `async`    | `setDefaultUrl()`         | Sets the default URL for notifications.                                                                                                                                                 | `url` (string)                                                                                                                                                   |
+| `async`    | `setDefaultTitle()`       | Sets the default title for notifications.                                                                                                                                               | `title` (string)                                                                                                                                                 |
+| `sync`     | `isPushSupported()`       | Returns true if the current browser supports web push.                                                                                                                                  |                                                                                                                                                                  |
+| `async`    | `requestPermission()`     | Requests push notifications permission via the native browser prompt.                                                                                                                   |                                                                                                                                                                  |
+| `sync`     | `addEventListener()`      | Adds an event listener for the following events:<br><br>- `click`<br>- `willDisplay`<br>- `dismiss`<br>- `permissionPromptDisplay`<br>- `permissionChange`*<br> * argument type: bool | - `<event>` (string)<br>- `(arg: <type>) => {}` (callback)                                                                                                       |
+| `sync`     | `removeEventListener()`   | Removes the event listener.                                                                                                                                                             | `() => {}` (the event listener you want to remove)                                                                                                               |
+|  | `permission`             | A boolean representing whether or not the user has granted permission for push notifications.                                                                                           |                                                                                                                                                                  |
+|  | `permissionNative`       | A string representing the native push permission status: 'default', 'granted', or 'denied'.                                                                                            |                                                                                                                                                                  |
 
 
 
@@ -171,6 +173,14 @@ OneSignal.Debug.setLogLevel(“trace”);
 | `setLogLevel`      | Turns on logging with the given log level.                                    | `setLogLevel: string`<br>- `"trace"`<br>- `"debug"`<br>- `"info"`<br>- `"warn"`<br>- `"error"` |
 
 # Limitations
+
+## May 2023
+## Version 16 (beta)
+Please test thoroughly prior to production use.
+* Any User namespace calls must be invoked **after** initialization (async). Example: `OneSignal.User.addTag("tag", "2");`
+* HTTP environments are not supported.
+* AMP environments are not supported.
+* Identity verification is not functional.
 
 ## January 2023
 ### Version 16 (alpha)

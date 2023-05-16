@@ -8,8 +8,9 @@ function App() {
       appId: "f5d104e9-7462-4bf7-adc8-4ca501cb55b2",
     }).then(() => {
       OneSignal.Debug.setLogLevel('trace');
-      OneSignal.login("rodrigo");
-      OneSignal.User.addAlias("myAlias", "1");
+      // OneSignal.login("rodrigo");
+      // OneSignal.User.addAlias("myAlias", "1");
+      console.log(OneSignal.User.PushSubscription.token)
     });
   } catch (e) {
     console.log(e);

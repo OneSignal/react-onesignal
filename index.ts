@@ -8,9 +8,10 @@ let isOneSignalInitialized = false;
 // OneSignal#init.
 let isOneSignalScriptFailed = false;
 
-window.OneSignalDeferred = window?.OneSignalDeferred || [];
-
-addSDKScript();
+if (window) {
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  addSDKScript();
+}
 
 declare global {
   interface Window {
@@ -116,11 +117,16 @@ interface IOneSignalCategories { positiveUpdateButton: string; negativeUpdateBut
 interface IOneSignalTagCategory { tag: string; label: string; checked?: boolean; }
 type PushSubscriptionNamespaceProperties = { id: string | null | undefined; token: string | null | undefined; optedIn: boolean; };
 type SubscriptionChangeEvent = { previous: PushSubscriptionNamespaceProperties; current: PushSubscriptionNamespaceProperties; };
-type NotificationEventName = 'click' | 'willDisplay' | 'dismiss' | 'permissionChange' | 'permissionPromptDisplay';
-interface NotificationButtonData { action?: string; title?: string; icon?: string; url?: string; }
-interface StructuredNotification { id: string; content: string; heading?: string; url?: string; data?: object; rr?: string; icon?: string; image?: string; tag?: string; badge?: string; vibrate?: string; buttons?: NotificationButtonData[]; }
+type NotificationEventName = 'click' | 'foregroundWillDisplay' | 'dismiss' | 'permissionChange' | 'permissionPromptDisplay';
+interface NotificationButtonData extends NotificationAction { url: string; };
 type SlidedownEventName = 'slidedownShown';
 type OneSignalDeferredLoadedCallback = (onesignal: IOneSignalOneSignal) => void;
+type OSNotification = { id?: string; title?: string; body?: string; data?: any; url?: string; icon?: string; image?: string; tag?: string; requireInteraction?: boolean; renotify?: true; actions?: Array<NotificationActionButton>; };
+type NotificationActionButton = { action: string; title: string; icon?: string; url?: string; }
+export type NotificationClickResult = { actionId?: string; url?: string; }
+type NotificationEventTypeMap = { 'click': NotificationClickResult; 'foregroundWillDisplay': NotificationForegroundWillDisplayEvent; 'dismiss': OSNotificationDataPayload; 'permissionChange': boolean; 'permissionPromptDisplay': void; };
+export type NotificationForegroundWillDisplayEvent = { notification: OSNotification; preventDefault(): void; }
+type OSNotificationDataPayload = { id: string; content: string; heading?: string; url?: string; data?: object; rr?: string; icon?: string; image?: string; tag?: string; badge?: string; vibrate?: VibratePattern; buttons?: NotificationButtonData[]; };
 
 interface IInitObject {
   appId: string;
@@ -156,13 +162,14 @@ interface IOneSignalOneSignal {
 	setConsentRequired(requiresConsent: boolean): Promise<void>;
 }
 interface IOneSignalNotifications {
+	permissionNative: NotificationPermission;
+	permission: boolean;
 	setDefaultUrl(url: string): Promise<void>;
 	setDefaultTitle(title: string): Promise<void>;
 	isPushSupported(): boolean;
-	getPermissionStatus(onComplete: Action<NotificationPermission>): Promise<NotificationPermission>;
 	requestPermission(): Promise<void>;
-	addEventListener(event: NotificationEventName, listener: (obj: any) => void): void;
-	removeEventListener(event: NotificationEventName, listener: (obj: any) => void): void;
+	addEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void;
+	removeEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void;
 }
 interface IOneSignalSlidedown {
 	promptPush(options?: AutoPromptOptions): Promise<void>;
@@ -201,8 +208,8 @@ interface IOneSignalPushSubscription {
 	optedIn: boolean | undefined;
 	optIn(): Promise<void>;
 	optOut(): Promise<void>;
-	addEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void;
-	removeEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void;
+	addEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
+	removeEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
 }
 
 function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
@@ -415,24 +422,6 @@ function notificationsSetDefaultTitle(title: string): Promise<void> {
   });
 }
 
-function notificationsGetPermissionStatus(onComplete: Action<NotificationPermission>): Promise<NotificationPermission> {
-  return new Promise((resolve, reject) => {
-    if (isOneSignalScriptFailed) {
-      reject();
-    }
-
-    try {
-      window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Notifications.getPermissionStatus(onComplete)
-          .then((value: any) => resolve(value))
-          .catch((error: any) => reject(error));
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
 function notificationsRequestPermission(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
@@ -451,21 +440,13 @@ function notificationsRequestPermission(): Promise<void> {
   });
 }
 
-function notificationsAddEventListener(event: 'click' | 'willDisplay' | 'dismiss', listener: (obj: StructuredNotification) => void): void;
-function notificationsAddEventListener(event: 'permissionChange', listener: (obj: { to: NotificationPermission }) => void): void;
-function notificationsAddEventListener(event: 'permissionPromptDisplay', listener: () => void): void;
-
-function notificationsAddEventListener(event: NotificationEventName, listener: (obj: any) => void): void {
+function notificationsAddEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
     OneSignal.Notifications.addEventListener(event, listener)
   });
 }
 
-function notificationsRemoveEventListener(event: 'click' | 'willDisplay' | 'dismiss', listener: (obj: StructuredNotification) => void): void;
-function notificationsRemoveEventListener(event: 'permissionChange', listener: (obj: { to: NotificationPermission }) => void): void;
-function notificationsRemoveEventListener(event: 'permissionPromptDisplay', listener: () => void): void;
-
-function notificationsRemoveEventListener(event: NotificationEventName, listener: (obj: any) => void): void {
+function notificationsRemoveEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
     OneSignal.Notifications.removeEventListener(event, listener)
   });
@@ -615,13 +596,13 @@ function pushSubscriptionOptOut(): Promise<void> {
   });
 }
 
-function pushSubscriptionAddEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void {
+function pushSubscriptionAddEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
     OneSignal.User.PushSubscription.addEventListener(event, listener)
   });
 }
 
-function pushSubscriptionRemoveEventListener(event: 'subscriptionChange', listener: (change: SubscriptionChangeEvent) => void): void {
+function pushSubscriptionRemoveEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
     OneSignal.User.PushSubscription.removeEventListener(event, listener)
   });
@@ -678,10 +659,11 @@ const SlidedownNamespace: IOneSignalSlidedown = {
 };
 
 const NotificationsNamespace: IOneSignalNotifications = {
+	get permissionNative(): NotificationPermission { return window.OneSignal?.Notifications?.permissionNative ?? 'default'; },
+	get permission(): boolean { return window.OneSignal?.Notifications?.permission ?? false; },
 	setDefaultUrl: notificationsSetDefaultUrl,
 	setDefaultTitle: notificationsSetDefaultTitle,
 	isPushSupported,
-	getPermissionStatus: notificationsGetPermissionStatus,
 	requestPermission: notificationsRequestPermission,
 	addEventListener: notificationsAddEventListener,
 	removeEventListener: notificationsRemoveEventListener,
