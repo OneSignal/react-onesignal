@@ -17,6 +17,29 @@ body:
       placeholder: The latest version of the SDK causes a runtime error.
     validations:
       required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome (Chromium)
+        - Safari
+        - Microsoft Edge
+        - Opera
+        - Brave
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: What operating system are you running?
+      description: Make sure to include the version.
+      placeholder: macOS Monterey 12.3.1
+    validations:
+      required: true
   - type: textarea
     id: reproduction-steps
     attributes:
@@ -44,3 +67,4 @@ body:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: Shell
+
