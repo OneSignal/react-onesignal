@@ -7512,6 +7512,11 @@ react-is@^18.0.0:
 "react-onesignal@file:..":
   version "3.0.0"
 
+react-onesignal@3.0.0-beta.3:
+  version "3.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-onesignal/-/react-onesignal-3.0.0-beta.3.tgz#8e6533db26fd6547996a3fefffe267c451ce154e"
+  integrity sha512-j4rwEPyNdFjBBFLhl6GMy9FvBzXUE7REBZDplByCgZyHcm3wlOwDrvBOGc3V50veqGKvYce43dgHGsyzD4kQJA==
+
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
