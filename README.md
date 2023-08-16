@@ -14,17 +14,17 @@
   </a>
 </p>
 
-> This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses React for its front-end codebase.
+> This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app in practically any JS front-end codebase (not limited to React).
 
 * 🏠 [Homepage](https://github.com/OneSignal/react-onesignal#readme)
 * 🖤 [npm](https://www.npmjs.com/package/react-onesignal)
 
-OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-App Messaging. It is trusted by 800k businesses to send 5 billion Push Notifications per day.
+OneSignal is the world's leader for Mobile Push Notifications, Web Push, and In-App Messaging. It is trusted by 2 million+ businesses to send 9 billion Push Notifications per day.
 
 You can find more information on OneSignal [here](https://onesignal.com/).
 
-### Migration Guide
-Version 2.0 was recently released. Read the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/master/MigrationGuide.md) here if you're coming from a version 1 release of the SDK.
+### Migration Guides
+Versions 3.0 were recently released and include breaking changes. See the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/main/MigrationGuide.md) to update your implementation.
 
 ## Contents
 - [Install](#install)
@@ -73,14 +73,36 @@ await OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
 const [initialized, setInitialized] = useState(false);
 OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }).then(() => {
   setInitialized(true);
-  OneSignal.showSlidedownPrompt().then(() => {
-    // do other stuff
-  });
+  OneSignal.Slidedown.promptPush();
+  // do other stuff
 })
 ```
 
 ### Init Options
-You can pass other [options](https://documentation.onesignal.com/docs/web-push-sdk#init) to the `init` function. Use these options to configure personalized prompt options, auto-resubscribe, and more.
+You can pass other [options](https://documentation.onesignal.com/v11.0/docs/web-sdk#initializing-the-sdk) to the `init` function. Use these options to configure personalized prompt options, auto-resubscribe, and more.
+
+<details>
+  <summary>Expand to see more options</summary>
+
+  | Property Name               | Type                  | Description                                        |
+| ---------------------------| --------------------- | -------------------------------------------------- |
+| `appId`                     | `string`              | The ID of your OneSignal app.                      |
+| `autoRegister`              | `boolean` (optional)  | Whether or not to automatically register the user. |
+| `autoResubscribe`           | `boolean` (optional)  | Whether or not to automatically resubscribe the user. |
+| `path`                      | `string` (optional)   | The path to the OneSignal service worker file.     |
+| `serviceWorkerPath`         | `string` (optional)   | The path to the OneSignal service worker script.   |
+| `serviceWorkerUpdaterPath`  | `string` (optional)   | The path to the OneSignal service worker updater script. |
+| `subdomainName`             | `string` (optional)   | The subdomain of your OneSignal app.               |
+| `allowLocalhostAsSecureOrigin` | `boolean` (optional) | Whether or not to allow localhost as a secure origin. |
+| `requiresUserPrivacyConsent`| `boolean` (optional)  | Whether or not the user's consent is required.     |
+| `persistNotification`       | `boolean` (optional)  | Whether or not notifications should persist.       |
+| `notificationClickHandlerMatch`| `string` (optional) | The URL match pattern for notification clicks.     |
+| `notificationClickHandlerAction`| `string` (optional)| The action to perform when a notification is clicked. |
+| `welcomeNotification`       | `object` (optional)   | The welcome notification configuration.            |
+| `notifyButton`              | `object` (optional)   | The notify button configuration.                   |
+| `promptOptions`             | `object` (optional)   | Additional options for the subscription prompt.    |
+| `webhooks`                  | `object` (optional)   | The webhook configuration.                         |
+| `[key: string]`             | `any`                 | Additional properties can be added as needed.      |
 
 **Service Worker Params**
 You can customize the location and filenames of service worker assets. You are also able to specify the specific scope that your service worker should control. You can read more [here](https://documentation.onesignal.com/docs/onesignal-service-worker-faq#sdk-parameter-reference-for-service-workers).
@@ -92,6 +114,10 @@ In this distribution, you can specify the parameters via the following:
 | `serviceWorkerParam`       | Use to specify the scope, or the path the service worker has control of.  Example:  `{ scope: "/js/push/onesignal/" }` |
 | `serviceWorkerPath`        | The path to the service worker file.                                                                                   |
 
+</details>
+
+---
+
 ### Service Worker File
 If you haven't done so already, you will need to add the [OneSignal Service Worker file](https://github.com/OneSignal/OneSignal-Website-SDK/files/7585231/OneSignal-Web-SDK-HTTPS-Integration-Files.zip) to your site ([learn more](https://documentation.onesignal.com/docs/web-push-quickstart#step-6-upload-files)).
 
@@ -101,76 +127,59 @@ The OneSignal SDK file must be publicly accessible. You can put them in your top
 Visit `https://yoursite.com/OneSignalSDKWorker.js` in the address bar to make sure the files are being served successfully.
 
 ---
-## OneSignal API
 ### Typescript
 This package includes Typescript support.
 
 ```ts
-interface OneSignal {
-  init(options: IInitObject): Promise<void>;
-  on(event: string, listener: () => void): void;
-  off(event: string, listener: () => void): void;
-  once(event: string, listener: () => void): void;
-  isPushNotificationsEnabled(callback?: Action<boolean>): Promise<boolean>;
-  showHttpPrompt(options?: AutoPromptOptions): Promise<void>;
-  registerForPushNotifications(options?: RegisterOptions): Promise<void>;
-  setDefaultNotificationUrl(url: string): Promise<void>;
-  setDefaultTitle(title: string): Promise<void>;
-  getTags(callback?: Action<any>): Promise<void>;
-  sendTag(key: string, value: any, callback?: Action<Object>): Promise<Object | null>;
-  sendTags(tags: TagsObject<any>, callback?: Action<Object>): Promise<Object | null>;
-  deleteTag(tag: string): Promise<Array<string>>;
-  deleteTags(tags: Array<string>, callback?: Action<Array<string>>): Promise<Array<string>>;
-  addListenerForNotificationOpened(callback?: Action<Notification>): Promise<void>;
-  setSubscription(newSubscription: boolean): Promise<void>;
-  showHttpPermissionRequest(options?: AutoPromptOptions): Promise<any>;
-  showNativePrompt(): Promise<void>;
-  showSlidedownPrompt(options?: AutoPromptOptions): Promise<void>;
-  showCategorySlidedown(options?: AutoPromptOptions): Promise<void>;
-  showSmsSlidedown(options?: AutoPromptOptions): Promise<void>;
-  showEmailSlidedown(options?: AutoPromptOptions): Promise<void>;
-  showSmsAndEmailSlidedown(options?: AutoPromptOptions): Promise<void>;
-  getNotificationPermission(onComplete?: Action<NotificationPermission>): Promise<NotificationPermission>;
-  getUserId(callback?: Action<string | undefined | null>): Promise<string | undefined | null>;
-  getSubscription(callback?: Action<boolean>): Promise<boolean>;
-  setEmail(email: string, options?: SetEmailOptions): Promise<string | null>;
-  setSMSNumber(smsNumber: string, options?: SetSMSOptions): Promise<string | null>;
-  logoutEmail(): Promise<void>;
-  logoutSMS(): Promise<void>;
-  setExternalUserId(externalUserId: string | undefined | null, authHash?: string): Promise<void>;
-  removeExternalUserId(): Promise<void>;
-  getExternalUserId(): Promise<string | undefined | null>;
-  provideUserConsent(consent: boolean): Promise<void>;
-  getEmailId(callback?: Action<string | undefined>): Promise<string | null | undefined>;
-  getSMSId(callback?: Action<string | undefined>): Promise<string | null | undefined>;
-  sendOutcome(outcomeName: string, outcomeWeight?: number | undefined): Promise<void>;
+interface IOneSignalOneSignal {
+	Slidedown: IOneSignalSlidedown;
+	Notifications: IOneSignalNotifications;
+	Session: IOneSignalSession;
+	User: IOneSignalUser;
+	Debug: IOneSignalDebug;
+	login(externalId: string, jwtToken?: string): Promise<void>;
+	logout(): Promise<void>;
+	init(options: IInitObject): Promise<void>;
+	setConsentGiven(consent: boolean): Promise<void>;
+	setConsentRequired(requiresConsent: boolean): Promise<void>;
 }
 ```
 
 ### OneSignal API
-See the official [OneSignal WebSDK reference](https://documentation.onesignal.com/docs/web-push-sdk) for information on all available SDK functions.
+See the official [OneSignal WebSDK reference](https://documentation.onesignal.com/v11.0/docs/web-sdk) for information on all available SDK functions.
 
 ---
 ## Advanced Usage
 ### Events and Event Listeners
 Use listeners to react to OneSignal-related events:
 
-* `subscriptionChange`
-* `permissionPromptDisplay`
-* `notificationPermissionChange`
-* `popoverShown`
-* `customPromptClick`
-* `notificationDisplay`
-* `notificationDismiss`
+### Notifications Namespace
+| Event Name | Callback Argument Type |
+|-|-|
+|'click'      | NotificationClickEvent|
+|'foregroundWillDisplay'| NotificationForegroundWillDisplayEvent
+| 'dismiss'| NotificationDismissEvent|
+|'permissionChange'| boolean|
+|'permissionPromptDisplay'| void|
+
+### Slidedown Namespace
+| Event Name | Callback Argument Type |
+|-|-|
+|'slidedownShown'      | boolean |
+
+### Push Subscription Namespace
+| Event Name | Callback Argument Type |
+|-|-|
+|'change'      | boolean |
 
 **Example**
 ```js
-OneSignal.on('subscriptionChange', function(isSubscribed) {
-  console.log("The user's subscription state is now:", isSubscribed);
+OneSignal.Notifications.addEventListener('click', (event) => {
+  console.log("The notification was clicked!", event);
 });
 ```
 
-See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-push-sdk) for all available event listeners.
+See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/v11.0/docs/web-sdk) for all available event listeners.
 
 ## Troubleshooting
 ### `window.OneSignal already defined as 'object'!`
@@ -201,7 +210,7 @@ Reach out to us via our [Discord server](https://discord.com/invite/EP7gf6Uz7G)!
 
 ## 📝 License
 
-Copyright © 2022 [OneSignal](https://github.com/OneSignal).<br />
+Copyright © 2023 [OneSignal](https://github.com/OneSignal).<br />
 This project is [Modified MIT](https://github.com/OneSignal/react-onesignal/blob/master/LICENSE) licensed.
 
 ## Thanks
