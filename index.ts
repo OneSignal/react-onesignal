@@ -100,12 +100,12 @@ const init = (options: IInitObject): Promise<void> => {
     return Promise.reject(`Document is not defined.`);
   }
 
-  return new Promise<void>((resolve) => {
+  return new Promise<void>((resolve, reject) => {
     window.OneSignalDeferred?.push((OneSignal) => {
       OneSignal.init(options).then(() => {
         isOneSignalInitialized = true;
         resolve();
-      });
+      }).catch(reject);
     });
   });
 };
