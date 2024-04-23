@@ -303,7 +303,9 @@ interface IOneSignalUser {
 	addTags(tags: { [key: string]: string }): void;
 	removeTag(key: string): void;
 	removeTags(keys: string[]): void;
+  onesignalId?: string;
 }
+
 interface IOneSignalPushSubscription {
 	id: string | null | undefined;
 	token: string | null | undefined;
@@ -739,6 +741,7 @@ const UserNamespace: IOneSignalUser = {
 	removeTag: userRemoveTag,
 	removeTags: userRemoveTags,
 	PushSubscription: PushSubscriptionNamespace,
+  onesignalId: window.OneSignal?.User?.onesignalId
 };
 
 const SessionNamespace: IOneSignalSession = {
