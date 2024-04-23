@@ -303,6 +303,7 @@ interface IOneSignalUser {
 	addTags(tags: { [key: string]: string }): void;
 	removeTag(key: string): void;
 	removeTags(keys: string[]): void;
+  setLanguage(language: string): void;
 }
 interface IOneSignalPushSubscription {
 	id: string | null | undefined;
@@ -662,6 +663,12 @@ function userRemoveTags(keys: string[]): void {
   });
 }
 
+function userSetLanguage(language: string): void {
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.setLanguage(language);
+  });
+}
+
 function pushSubscriptionOptIn(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
@@ -738,6 +745,7 @@ const UserNamespace: IOneSignalUser = {
 	addTags: userAddTags,
 	removeTag: userRemoveTag,
 	removeTags: userRemoveTags,
+  setLanguage: userSetLanguage,
 	PushSubscription: PushSubscriptionNamespace,
 };
 
