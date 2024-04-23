@@ -740,8 +740,8 @@ const UserNamespace: IOneSignalUser = {
 	addTags: userAddTags,
 	removeTag: userRemoveTag,
 	removeTags: userRemoveTags,
-	PushSubscription: PushSubscriptionNamespace,
-  onesignalId: window.OneSignal?.User?.onesignalId
+  get onesignalId(): string | null | undefined { return window.OneSignal?.User?.onesignalId },
+	PushSubscription: PushSubscriptionNamespace
 };
 
 const SessionNamespace: IOneSignalSession = {
