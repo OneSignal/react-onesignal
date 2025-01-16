@@ -161,7 +161,7 @@ interface IOSNotification {
    * If this value is the same as existing notification, it will replace it
    * Can be set when creating the notification with "Web Push Topic" on the dashboard
    * or web_push_topic from the REST API.
-  */
+   */
   readonly topic?: string;
 
   /**
@@ -213,7 +213,7 @@ type NotificationEventTypeMap = {
   'dismiss': NotificationDismissEvent;
   'permissionChange': boolean;
   'permissionPromptDisplay': void;
-}
+};
 
 interface NotificationForegroundWillDisplayEvent {
   readonly notification: IOSNotification;
@@ -229,6 +229,13 @@ interface NotificationClickEvent {
   readonly result: NotificationClickResult;
 }
 
+type UserChangeEvent = {
+  current: UserNamespaceProperties;
+};
+type UserNamespaceProperties = {
+  onesignalId: string | undefined;
+  externalId: string | undefined;
+};
 
 interface IInitObject {
   appId: string;
@@ -243,10 +250,11 @@ interface IInitObject {
   autoRegister?: boolean;
   notificationClickHandlerMatch?: string;
   notificationClickHandlerAction?: string;
+  path?: string;
   serviceWorkerParam?: { scope: string };
   serviceWorkerPath?: string;
+  serviceWorkerOverrideForTypical?: boolean;
   serviceWorkerUpdaterPath?: string;
-  path?: string;
   allowLocalhostAsSecureOrigin?: boolean;
   [key: string]: any;
 }
@@ -290,6 +298,8 @@ interface IOneSignalSession {
 	sendUniqueOutcome(outcomeName: string): Promise<void>;
 }
 interface IOneSignalUser {
+	onesignalId: string | undefined;
+	externalId: string | undefined;
 	PushSubscription: IOneSignalPushSubscription;
 	addAlias(label: string, id: string): void;
 	addAliases(aliases: { [key: string]: string }): void;
@@ -303,6 +313,11 @@ interface IOneSignalUser {
 	addTags(tags: { [key: string]: string }): void;
 	removeTag(key: string): void;
 	removeTags(keys: string[]): void;
+	getTags(): { [key: string]: string };
+	addEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
+	removeEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
+	setLanguage(language: string): void;
+	getLanguage(): string;
 }
 interface IOneSignalPushSubscription {
 	id: string | null | undefined;
@@ -313,17 +328,16 @@ interface IOneSignalPushSubscription {
 	addEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
 	removeEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
 }
-
 function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.login(externalId, jwtToken)
-          .then((value: any) => resolve(value))
+        OneSignal.login(externalId, jwtToken).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -331,17 +345,16 @@ function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
     }
   });
 }
-
 function oneSignalLogout(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.logout()
-          .then((value: any) => resolve(value))
+        OneSignal.logout().then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -349,17 +362,16 @@ function oneSignalLogout(): Promise<void> {
     }
   });
 }
-
 function oneSignalSetConsentGiven(consent: boolean): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.setConsentGiven(consent)
-          .then((value: any) => resolve(value))
+        OneSignal.setConsentGiven(consent).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -367,17 +379,16 @@ function oneSignalSetConsentGiven(consent: boolean): Promise<void> {
     }
   });
 }
-
 function oneSignalSetConsentRequired(requiresConsent: boolean): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.setConsentRequired(requiresConsent)
-          .then((value: any) => resolve(value))
+        OneSignal.setConsentRequired(requiresConsent).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -385,17 +396,16 @@ function oneSignalSetConsentRequired(requiresConsent: boolean): Promise<void> {
     }
   });
 }
-
 function slidedownPromptPush(options?: AutoPromptOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Slidedown.promptPush(options)
-          .then((value: any) => resolve(value))
+        OneSignal.Slidedown.promptPush(options).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -403,17 +413,16 @@ function slidedownPromptPush(options?: AutoPromptOptions): Promise<void> {
     }
   });
 }
-
 function slidedownPromptPushCategories(options?: AutoPromptOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Slidedown.promptPushCategories(options)
-          .then((value: any) => resolve(value))
+        OneSignal.Slidedown.promptPushCategories(options).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -421,17 +430,16 @@ function slidedownPromptPushCategories(options?: AutoPromptOptions): Promise<voi
     }
   });
 }
-
 function slidedownPromptSms(options?: AutoPromptOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Slidedown.promptSms(options)
-          .then((value: any) => resolve(value))
+        OneSignal.Slidedown.promptSms(options).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -439,17 +447,16 @@ function slidedownPromptSms(options?: AutoPromptOptions): Promise<void> {
     }
   });
 }
-
 function slidedownPromptEmail(options?: AutoPromptOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Slidedown.promptEmail(options)
-          .then((value: any) => resolve(value))
+        OneSignal.Slidedown.promptEmail(options).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -457,17 +464,16 @@ function slidedownPromptEmail(options?: AutoPromptOptions): Promise<void> {
     }
   });
 }
-
 function slidedownPromptSmsAndEmail(options?: AutoPromptOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Slidedown.promptSmsAndEmail(options)
-          .then((value: any) => resolve(value))
+        OneSignal.Slidedown.promptSmsAndEmail(options).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -475,29 +481,30 @@ function slidedownPromptSmsAndEmail(options?: AutoPromptOptions): Promise<void> 
     }
   });
 }
-
 function slidedownAddEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Slidedown.addEventListener(event, listener)
+    OneSignal.Slidedown.addEventListener(event, listener);
   });
+  
 }
-
 function slidedownRemoveEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Slidedown.removeEventListener(event, listener)
+    OneSignal.Slidedown.removeEventListener(event, listener);
   });
+  
 }
-
 function notificationsSetDefaultUrl(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Notifications.setDefaultUrl(url)
-          .then((value: any) => resolve(value))
+        OneSignal.Notifications.setDefaultUrl(url).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -505,17 +512,16 @@ function notificationsSetDefaultUrl(url: string): Promise<void> {
     }
   });
 }
-
 function notificationsSetDefaultTitle(title: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Notifications.setDefaultTitle(title)
-          .then((value: any) => resolve(value))
+        OneSignal.Notifications.setDefaultTitle(title).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -523,17 +529,16 @@ function notificationsSetDefaultTitle(title: string): Promise<void> {
     }
   });
 }
-
 function notificationsRequestPermission(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Notifications.requestPermission()
-          .then((value: any) => resolve(value))
+        OneSignal.Notifications.requestPermission().then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -541,29 +546,30 @@ function notificationsRequestPermission(): Promise<void> {
     }
   });
 }
-
 function notificationsAddEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Notifications.addEventListener(event, listener)
+    OneSignal.Notifications.addEventListener(event, listener);
   });
+  
 }
-
 function notificationsRemoveEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Notifications.removeEventListener(event, listener)
+    OneSignal.Notifications.removeEventListener(event, listener);
   });
+  
 }
-
 function sessionSendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Session.sendOutcome(outcomeName, outcomeWeight)
-          .then((value: any) => resolve(value))
+        OneSignal.Session.sendOutcome(outcomeName, outcomeWeight).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -571,17 +577,16 @@ function sessionSendOutcome(outcomeName: string, outcomeWeight?: number): Promis
     }
   });
 }
-
 function sessionSendUniqueOutcome(outcomeName: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.Session.sendUniqueOutcome(outcomeName)
-          .then((value: any) => resolve(value))
+        OneSignal.Session.sendUniqueOutcome(outcomeName).then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -589,89 +594,135 @@ function sessionSendUniqueOutcome(outcomeName: string): Promise<void> {
     }
   });
 }
-
 function userAddAlias(label: string, id: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addAlias(label, id)
+    OneSignal.User.addAlias(label, id);
   });
+  
 }
-
 function userAddAliases(aliases: { [key: string]: string }): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addAliases(aliases)
+    OneSignal.User.addAliases(aliases);
   });
+  
 }
-
 function userRemoveAlias(label: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeAlias(label)
+    OneSignal.User.removeAlias(label);
   });
+  
 }
-
 function userRemoveAliases(labels: string[]): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeAliases(labels)
+    OneSignal.User.removeAliases(labels);
   });
+  
 }
-
 function userAddEmail(email: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addEmail(email)
+    OneSignal.User.addEmail(email);
   });
+  
 }
-
 function userRemoveEmail(email: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeEmail(email)
+    OneSignal.User.removeEmail(email);
   });
+  
 }
-
 function userAddSms(smsNumber: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addSms(smsNumber)
+    OneSignal.User.addSms(smsNumber);
   });
+  
 }
-
 function userRemoveSms(smsNumber: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeSms(smsNumber)
+    OneSignal.User.removeSms(smsNumber);
   });
+  
 }
-
 function userAddTag(key: string, value: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addTag(key, value)
+    OneSignal.User.addTag(key, value);
   });
+  
 }
-
 function userAddTags(tags: { [key: string]: string }): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addTags(tags)
+    OneSignal.User.addTags(tags);
   });
+  
 }
-
 function userRemoveTag(key: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeTag(key)
+    OneSignal.User.removeTag(key);
   });
+  
 }
-
 function userRemoveTags(keys: string[]): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeTags(keys)
+    OneSignal.User.removeTags(keys);
   });
+  
 }
-
+function userGetTags(): { [key: string]: string } {
+  let retVal: { [key: string]: string };
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    retVal = OneSignal.User.getTags();
+  });
+  return retVal;
+}
+function userAddEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void {
+  
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.addEventListener(event, listener);
+  });
+  
+}
+function userRemoveEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void {
+  
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.removeEventListener(event, listener);
+  });
+  
+}
+function userSetLanguage(language: string): void {
+  
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    OneSignal.User.setLanguage(language);
+  });
+  
+}
+function userGetLanguage(): string {
+  let retVal: string;
+  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+    retVal = OneSignal.User.getLanguage();
+  });
+  return retVal;
+}
 function pushSubscriptionOptIn(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.User.PushSubscription.optIn()
-          .then((value: any) => resolve(value))
+        OneSignal.User.PushSubscription.optIn().then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -679,17 +730,16 @@ function pushSubscriptionOptIn(): Promise<void> {
     }
   });
 }
-
 function pushSubscriptionOptOut(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
-      reject();
+      reject(new Error('OneSignal script failed to load.'));
+      return;
     }
 
     try {
       window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-        OneSignal.User.PushSubscription.optOut()
-          .then((value: any) => resolve(value))
+        OneSignal.User.PushSubscription.optOut().then(() => resolve())
           .catch((error: any) => reject(error));
       });
     } catch (error) {
@@ -697,28 +747,31 @@ function pushSubscriptionOptOut(): Promise<void> {
     }
   });
 }
-
 function pushSubscriptionAddEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.PushSubscription.addEventListener(event, listener)
+    OneSignal.User.PushSubscription.addEventListener(event, listener);
   });
+  
 }
-
 function pushSubscriptionRemoveEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.PushSubscription.removeEventListener(event, listener)
+    OneSignal.User.PushSubscription.removeEventListener(event, listener);
   });
+  
 }
-
 function debugSetLogLevel(logLevel: string): void {
+  
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Debug.setLogLevel(logLevel)
+    OneSignal.Debug.setLogLevel(logLevel);
   });
+  
 }
 const PushSubscriptionNamespace: IOneSignalPushSubscription = {
-	get id(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.id },
-	get token(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.token },
-	get optedIn(): boolean | undefined { return window.OneSignal?.User?.PushSubscription?.optedIn },
+	get id(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.id; },
+	get token(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.token; },
+	get optedIn(): boolean | undefined { return window.OneSignal?.User?.PushSubscription?.optedIn; },
 	optIn: pushSubscriptionOptIn,
 	optOut: pushSubscriptionOptOut,
 	addEventListener: pushSubscriptionAddEventListener,
@@ -726,6 +779,8 @@ const PushSubscriptionNamespace: IOneSignalPushSubscription = {
 };
 
 const UserNamespace: IOneSignalUser = {
+	get onesignalId(): string | undefined { return window.OneSignal?.User?.onesignalId; },
+	get externalId(): string | undefined { return window.OneSignal?.User?.externalId; },
 	addAlias: userAddAlias,
 	addAliases: userAddAliases,
 	removeAlias: userRemoveAlias,
@@ -738,6 +793,11 @@ const UserNamespace: IOneSignalUser = {
 	addTags: userAddTags,
 	removeTag: userRemoveTag,
 	removeTags: userRemoveTags,
+	getTags: userGetTags,
+	addEventListener: userAddEventListener,
+	removeEventListener: userRemoveEventListener,
+	setLanguage: userSetLanguage,
+	getLanguage: userGetLanguage,
 	PushSubscription: PushSubscriptionNamespace,
 };
 
