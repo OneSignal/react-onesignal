@@ -3,70 +3,48 @@
   "version": "3.0.1",
   "description": "React OneSignal Module: Make it easy to integrate OneSignal with your React App!",
   "author": "rgomezp",
-  "contributors": [{ "name": "Rodrigo Gomez-Palacio" }, { "name": "Pedro Bini" }, { "name": "Graham Marlow" }],
+  "contributors": [
+    {
+      "name": "Rodrigo Gomez-Palacio"
+    },
+    {
+      "name": "Pedro Bini"
+    },
+    {
+      "name": "Graham Marlow"
+    }
+  ],
   "homepage": "https://onesignal.com",
   "repository": "https://github.com/OneSignal/react-onesignal.git",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=8",
-    "npm": ">=5"
+    "node": ">=22",
+    "npm": ">=10"
   },
   "scripts": {
-    "lint": "./node_modules/.bin/eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "build": "rollup -c",
-    "prepare": "yarn run build",
-    "test": "yarn"
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "build": "vite build",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": ">= 16.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-external-helpers": "^7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-proposal-decorators": "^7.0.0",
-    "@babel/plugin-proposal-do-expressions": "^7.0.0",
-    "@babel/plugin-proposal-export-default-from": "^7.0.0",
-    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
-    "@babel/plugin-proposal-function-bind": "^7.0.0",
-    "@babel/plugin-proposal-function-sent": "^7.0.0",
-    "@babel/plugin-proposal-json-strings": "^7.0.0",
-    "@babel/plugin-proposal-logical-assignment-operators": "^7.0.0",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
-    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
-    "@babel/plugin-proposal-pipeline-operator": "^7.0.0",
-    "@babel/plugin-proposal-throw-expressions": "^7.0.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-    "@babel/plugin-syntax-import-meta": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "@types/jest": "^25.1.2",
-    "@types/lodash.isequal": "^4.5.5",
     "@types/react": "^16.9.19",
-    "@typescript-eslint/eslint-plugin": "^2.19.0",
-    "@typescript-eslint/parser": "^2.19.0",
-    "babel-eslint": "^10.0.1",
-    "cross-env": "^5.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.18.3",
-    "eslint-plugin-react-hooks": "^1.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "react": "^16.13.1",
-    "rollup": "^1.1.2",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-peer-deps-external": "^2.2.0",
-    "rollup-plugin-typescript2": "^0.17.0",
-    "rollup-plugin-url": "^2.1.0",
-    "typescript": "^3.7.5"
+    "typescript": "^5.8.2",
+    "vite": "^6.2.1",
+    "vite-plugin-dts": "^4.5.3"
   },
   "keywords": [
     "onesignal",

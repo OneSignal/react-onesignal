@@ -1,5 +1,6 @@
 const ONESIGNAL_SDK_ID = 'onesignal-sdk';
-const ONE_SIGNAL_SCRIPT_SRC = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+const ONE_SIGNAL_SCRIPT_SRC =
+  'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
 
 // true if the script is successfully loaded from CDN.
 let isOneSignalInitialized = false;
@@ -7,11 +8,6 @@ let isOneSignalInitialized = false;
 // to disambiguate between a CDN load failure and a delayed call to
 // OneSignal#init.
 let isOneSignalScriptFailed = false;
-
-if (typeof window !== 'undefined') {
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  addSDKScript();
-}
 
 declare global {
   interface Window {
@@ -39,9 +35,14 @@ function addSDKScript() {
   // This is important for users who may block cdn.onesignal.com w/ adblock.
   script.onerror = () => {
     handleOnError();
-  }
+  };
 
   document.head.appendChild(script);
+}
+
+if (typeof window !== 'undefined') {
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  addSDKScript();
 }
 
 /**
@@ -57,20 +58,26 @@ function isPushNotificationsSupported() {
 
 function isMacOSSafariInIframe(): boolean {
   // Fallback detection for Safari on macOS in an iframe context
-  return window.top !== window && // isContextIframe
-  navigator.vendor === "Apple Computer, Inc." && // isSafari
-  navigator.platform === "MacIntel"; // isMacOS
+  return (
+    window.top !== window && // isContextIframe
+    navigator.vendor === 'Apple Computer, Inc.' && // isSafari
+    navigator.platform === 'MacIntel'
+  ); // isMacOS
 }
 
 function supportsSafariPush(): boolean {
-  return (window.safari && typeof window.safari.pushNotification !== "undefined") ||
-          isMacOSSafariInIframe();
+  return (
+    (window.safari && typeof window.safari.pushNotification !== 'undefined') ||
+    isMacOSSafariInIframe()
+  );
 }
 
 // Does the browser support the standard Push API
 function supportsVapidPush(): boolean {
-  return typeof PushSubscriptionOptions !== "undefined" &&
-         PushSubscriptionOptions.prototype.hasOwnProperty("applicationServerKey");
+  return (
+    typeof PushSubscriptionOptions !== 'undefined' &&
+    PushSubscriptionOptions.prototype.hasOwnProperty('applicationServerKey')
+  );
 }
 /* E N D */
 
@@ -80,16 +87,14 @@ function supportsVapidPush(): boolean {
  * Natively, this is done via the shimloading mechanism (i.e. if the SDK loads, push is supported)
  * @PublicApi
  */
-const isPushSupported = (): boolean => {
-  return isPushNotificationsSupported();
-}
+const isPushSupported = (): boolean => isPushNotificationsSupported();
 
 /**
  * @PublicApi
  */
 const init = (options: IInitObject): Promise<void> => {
   if (isOneSignalInitialized) {
-    return Promise.reject(`OneSignal is already initialized.`);
+    return Promise.reject('OneSignal is already initialized.');
   }
 
   if (!options || !options.appId) {
@@ -97,7 +102,7 @@ const init = (options: IInitObject): Promise<void> => {
   }
 
   if (!document) {
-    return Promise.reject(`Document is not defined.`);
+    return Promise.reject('Document is not defined.');
   }
 
   return new Promise<void>((resolve) => {
@@ -110,13 +115,45 @@ const init = (options: IInitObject): Promise<void> => {
   });
 };
 
-interface AutoPromptOptions { force?: boolean; forceSlidedownOverNative?: boolean; slidedownPromptOptions?: IOneSignalAutoPromptOptions; }
-interface IOneSignalAutoPromptOptions { force?: boolean; forceSlidedownOverNative?: boolean; isInUpdateMode?: boolean; categoryOptions?: IOneSignalCategories; }
-interface IOneSignalCategories { positiveUpdateButton: string; negativeUpdateButton: string; savingButtonText: string; errorButtonText: string; updateMessage: string; tags: IOneSignalTagCategory[]; }
-interface IOneSignalTagCategory { tag: string; label: string; checked?: boolean; }
-type PushSubscriptionNamespaceProperties = { id: string | null | undefined; token: string | null | undefined; optedIn: boolean; };
-type SubscriptionChangeEvent = { previous: PushSubscriptionNamespaceProperties; current: PushSubscriptionNamespaceProperties; };
-type NotificationEventName = 'click' | 'foregroundWillDisplay' | 'dismiss' | 'permissionChange' | 'permissionPromptDisplay';
+interface AutoPromptOptions {
+  force?: boolean;
+  forceSlidedownOverNative?: boolean;
+  slidedownPromptOptions?: IOneSignalAutoPromptOptions;
+}
+interface IOneSignalAutoPromptOptions {
+  force?: boolean;
+  forceSlidedownOverNative?: boolean;
+  isInUpdateMode?: boolean;
+  categoryOptions?: IOneSignalCategories;
+}
+interface IOneSignalCategories {
+  positiveUpdateButton: string;
+  negativeUpdateButton: string;
+  savingButtonText: string;
+  errorButtonText: string;
+  updateMessage: string;
+  tags: IOneSignalTagCategory[];
+}
+interface IOneSignalTagCategory {
+  tag: string;
+  label: string;
+  checked?: boolean;
+}
+type PushSubscriptionNamespaceProperties = {
+  id: string | null | undefined;
+  token: string | null | undefined;
+  optedIn: boolean;
+};
+type SubscriptionChangeEvent = {
+  previous: PushSubscriptionNamespaceProperties;
+  current: PushSubscriptionNamespaceProperties;
+};
+type NotificationEventName =
+  | 'click'
+  | 'foregroundWillDisplay'
+  | 'dismiss'
+  | 'permissionChange'
+  | 'permissionPromptDisplay';
 type SlidedownEventName = 'slidedownShown';
 type OneSignalDeferredLoadedCallback = (onesignal: IOneSignalOneSignal) => void;
 interface IOSNotification {
@@ -161,7 +198,7 @@ interface IOSNotification {
    * If this value is the same as existing notification, it will replace it
    * Can be set when creating the notification with "Web Push Topic" on the dashboard
    * or web_push_topic from the REST API.
-  */
+   */
   readonly topic?: string;
 
   /**
@@ -208,12 +245,12 @@ interface NotificationClickResult {
 }
 
 type NotificationEventTypeMap = {
-  'click': NotificationClickEvent;
-  'foregroundWillDisplay': NotificationForegroundWillDisplayEvent;
-  'dismiss': NotificationDismissEvent;
-  'permissionChange': boolean;
-  'permissionPromptDisplay': void;
-}
+  click: NotificationClickEvent;
+  foregroundWillDisplay: NotificationForegroundWillDisplayEvent;
+  dismiss: NotificationDismissEvent;
+  permissionChange: boolean;
+  permissionPromptDisplay: void;
+};
 
 interface NotificationForegroundWillDisplayEvent {
   readonly notification: IOSNotification;
@@ -228,7 +265,6 @@ interface NotificationClickEvent {
   readonly notification: IOSNotification;
   readonly result: NotificationClickResult;
 }
-
 
 interface IInitObject {
   appId: string;
@@ -252,66 +288,84 @@ interface IInitObject {
 }
 
 interface IOneSignalOneSignal {
-	Slidedown: IOneSignalSlidedown;
-	Notifications: IOneSignalNotifications;
-	Session: IOneSignalSession;
-	User: IOneSignalUser;
-	Debug: IOneSignalDebug;
-	login(externalId: string, jwtToken?: string): Promise<void>;
-	logout(): Promise<void>;
-	init(options: IInitObject): Promise<void>;
-	setConsentGiven(consent: boolean): Promise<void>;
-	setConsentRequired(requiresConsent: boolean): Promise<void>;
+  Slidedown: IOneSignalSlidedown;
+  Notifications: IOneSignalNotifications;
+  Session: IOneSignalSession;
+  User: IOneSignalUser;
+  Debug: IOneSignalDebug;
+  login(externalId: string, jwtToken?: string): Promise<void>;
+  logout(): Promise<void>;
+  init(options: IInitObject): Promise<void>;
+  setConsentGiven(consent: boolean): Promise<void>;
+  setConsentRequired(requiresConsent: boolean): Promise<void>;
 }
 interface IOneSignalNotifications {
-	permissionNative: NotificationPermission;
-	permission: boolean;
-	setDefaultUrl(url: string): Promise<void>;
-	setDefaultTitle(title: string): Promise<void>;
-	isPushSupported(): boolean;
-	requestPermission(): Promise<void>;
-	addEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void;
-	removeEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void;
+  permissionNative: NotificationPermission;
+  permission: boolean;
+  setDefaultUrl(url: string): Promise<void>;
+  setDefaultTitle(title: string): Promise<void>;
+  isPushSupported(): boolean;
+  requestPermission(): Promise<void>;
+  addEventListener<K extends NotificationEventName>(
+    event: K,
+    listener: (obj: NotificationEventTypeMap[K]) => void,
+  ): void;
+  removeEventListener<K extends NotificationEventName>(
+    event: K,
+    listener: (obj: NotificationEventTypeMap[K]) => void,
+  ): void;
 }
 interface IOneSignalSlidedown {
-	promptPush(options?: AutoPromptOptions): Promise<void>;
-	promptPushCategories(options?: AutoPromptOptions): Promise<void>;
-	promptSms(options?: AutoPromptOptions): Promise<void>;
-	promptEmail(options?: AutoPromptOptions): Promise<void>;
-	promptSmsAndEmail(options?: AutoPromptOptions): Promise<void>;
-	addEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void;
-	removeEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void;
+  promptPush(options?: AutoPromptOptions): Promise<void>;
+  promptPushCategories(options?: AutoPromptOptions): Promise<void>;
+  promptSms(options?: AutoPromptOptions): Promise<void>;
+  promptEmail(options?: AutoPromptOptions): Promise<void>;
+  promptSmsAndEmail(options?: AutoPromptOptions): Promise<void>;
+  addEventListener(
+    event: SlidedownEventName,
+    listener: (wasShown: boolean) => void,
+  ): void;
+  removeEventListener(
+    event: SlidedownEventName,
+    listener: (wasShown: boolean) => void,
+  ): void;
 }
 interface IOneSignalDebug {
-	setLogLevel(logLevel: string): void;
+  setLogLevel(logLevel: string): void;
 }
 interface IOneSignalSession {
-	sendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void>;
-	sendUniqueOutcome(outcomeName: string): Promise<void>;
+  sendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void>;
+  sendUniqueOutcome(outcomeName: string): Promise<void>;
 }
 interface IOneSignalUser {
-	PushSubscription: IOneSignalPushSubscription;
-	addAlias(label: string, id: string): void;
-	addAliases(aliases: { [key: string]: string }): void;
-	removeAlias(label: string): void;
-	removeAliases(labels: string[]): void;
-	addEmail(email: string): void;
-	removeEmail(email: string): void;
-	addSms(smsNumber: string): void;
-	removeSms(smsNumber: string): void;
-	addTag(key: string, value: string): void;
-	addTags(tags: { [key: string]: string }): void;
-	removeTag(key: string): void;
-	removeTags(keys: string[]): void;
+  PushSubscription: IOneSignalPushSubscription;
+  addAlias(label: string, id: string): void;
+  addAliases(aliases: { [key: string]: string }): void;
+  removeAlias(label: string): void;
+  removeAliases(labels: string[]): void;
+  addEmail(email: string): void;
+  removeEmail(email: string): void;
+  addSms(smsNumber: string): void;
+  removeSms(smsNumber: string): void;
+  addTag(key: string, value: string): void;
+  addTags(tags: { [key: string]: string }): void;
+  removeTag(key: string): void;
+  removeTags(keys: string[]): void;
 }
 interface IOneSignalPushSubscription {
-	id: string | null | undefined;
-	token: string | null | undefined;
-	optedIn: boolean | undefined;
-	optIn(): Promise<void>;
-	optOut(): Promise<void>;
-	addEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
-	removeEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
+  id: string | null | undefined;
+  token: string | null | undefined;
+  optedIn: boolean | undefined;
+  optIn(): Promise<void>;
+  optOut(): Promise<void>;
+  addEventListener(
+    event: 'change',
+    listener: (change: SubscriptionChangeEvent) => void,
+  ): void;
+  removeEventListener(
+    event: 'change',
+    listener: (change: SubscriptionChangeEvent) => void,
+  ): void;
 }
 
 function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
@@ -404,7 +458,9 @@ function slidedownPromptPush(options?: AutoPromptOptions): Promise<void> {
   });
 }
 
-function slidedownPromptPushCategories(options?: AutoPromptOptions): Promise<void> {
+function slidedownPromptPushCategories(
+  options?: AutoPromptOptions,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
       reject();
@@ -458,7 +514,9 @@ function slidedownPromptEmail(options?: AutoPromptOptions): Promise<void> {
   });
 }
 
-function slidedownPromptSmsAndEmail(options?: AutoPromptOptions): Promise<void> {
+function slidedownPromptSmsAndEmail(
+  options?: AutoPromptOptions,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
       reject();
@@ -476,15 +534,21 @@ function slidedownPromptSmsAndEmail(options?: AutoPromptOptions): Promise<void> 
   });
 }
 
-function slidedownAddEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void {
+function slidedownAddEventListener(
+  event: SlidedownEventName,
+  listener: (wasShown: boolean) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Slidedown.addEventListener(event, listener)
+    OneSignal.Slidedown.addEventListener(event, listener);
   });
 }
 
-function slidedownRemoveEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void {
+function slidedownRemoveEventListener(
+  event: SlidedownEventName,
+  listener: (wasShown: boolean) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Slidedown.removeEventListener(event, listener)
+    OneSignal.Slidedown.removeEventListener(event, listener);
   });
 }
 
@@ -542,19 +606,28 @@ function notificationsRequestPermission(): Promise<void> {
   });
 }
 
-function notificationsAddEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
+function notificationsAddEventListener<K extends NotificationEventName>(
+  event: K,
+  listener: (obj: NotificationEventTypeMap[K]) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Notifications.addEventListener(event, listener)
+    OneSignal.Notifications.addEventListener(event, listener);
   });
 }
 
-function notificationsRemoveEventListener<K extends NotificationEventName>(event: K, listener: (obj: NotificationEventTypeMap[K]) => void): void {
+function notificationsRemoveEventListener<K extends NotificationEventName>(
+  event: K,
+  listener: (obj: NotificationEventTypeMap[K]) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Notifications.removeEventListener(event, listener)
+    OneSignal.Notifications.removeEventListener(event, listener);
   });
 }
 
-function sessionSendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void> {
+function sessionSendOutcome(
+  outcomeName: string,
+  outcomeWeight?: number,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
       reject();
@@ -592,73 +665,73 @@ function sessionSendUniqueOutcome(outcomeName: string): Promise<void> {
 
 function userAddAlias(label: string, id: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addAlias(label, id)
+    OneSignal.User.addAlias(label, id);
   });
 }
 
 function userAddAliases(aliases: { [key: string]: string }): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addAliases(aliases)
+    OneSignal.User.addAliases(aliases);
   });
 }
 
 function userRemoveAlias(label: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeAlias(label)
+    OneSignal.User.removeAlias(label);
   });
 }
 
 function userRemoveAliases(labels: string[]): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeAliases(labels)
+    OneSignal.User.removeAliases(labels);
   });
 }
 
 function userAddEmail(email: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addEmail(email)
+    OneSignal.User.addEmail(email);
   });
 }
 
 function userRemoveEmail(email: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeEmail(email)
+    OneSignal.User.removeEmail(email);
   });
 }
 
 function userAddSms(smsNumber: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addSms(smsNumber)
+    OneSignal.User.addSms(smsNumber);
   });
 }
 
 function userRemoveSms(smsNumber: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeSms(smsNumber)
+    OneSignal.User.removeSms(smsNumber);
   });
 }
 
 function userAddTag(key: string, value: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addTag(key, value)
+    OneSignal.User.addTag(key, value);
   });
 }
 
 function userAddTags(tags: { [key: string]: string }): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.addTags(tags)
+    OneSignal.User.addTags(tags);
   });
 }
 
 function userRemoveTag(key: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeTag(key)
+    OneSignal.User.removeTag(key);
   });
 }
 
 function userRemoveTags(keys: string[]): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.removeTags(keys)
+    OneSignal.User.removeTags(keys);
   });
 }
 
@@ -698,90 +771,106 @@ function pushSubscriptionOptOut(): Promise<void> {
   });
 }
 
-function pushSubscriptionAddEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
+function pushSubscriptionAddEventListener(
+  event: 'change',
+  listener: (change: SubscriptionChangeEvent) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.PushSubscription.addEventListener(event, listener)
+    OneSignal.User.PushSubscription.addEventListener(event, listener);
   });
 }
 
-function pushSubscriptionRemoveEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void {
+function pushSubscriptionRemoveEventListener(
+  event: 'change',
+  listener: (change: SubscriptionChangeEvent) => void,
+): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.User.PushSubscription.removeEventListener(event, listener)
+    OneSignal.User.PushSubscription.removeEventListener(event, listener);
   });
 }
 
 function debugSetLogLevel(logLevel: string): void {
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    OneSignal.Debug.setLogLevel(logLevel)
+    OneSignal.Debug.setLogLevel(logLevel);
   });
 }
 const PushSubscriptionNamespace: IOneSignalPushSubscription = {
-	get id(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.id },
-	get token(): string | null | undefined { return window.OneSignal?.User?.PushSubscription?.token },
-	get optedIn(): boolean | undefined { return window.OneSignal?.User?.PushSubscription?.optedIn },
-	optIn: pushSubscriptionOptIn,
-	optOut: pushSubscriptionOptOut,
-	addEventListener: pushSubscriptionAddEventListener,
-	removeEventListener: pushSubscriptionRemoveEventListener,
+  get id(): string | null | undefined {
+    return window.OneSignal?.User?.PushSubscription?.id;
+  },
+  get token(): string | null | undefined {
+    return window.OneSignal?.User?.PushSubscription?.token;
+  },
+  get optedIn(): boolean | undefined {
+    return window.OneSignal?.User?.PushSubscription?.optedIn;
+  },
+  optIn: pushSubscriptionOptIn,
+  optOut: pushSubscriptionOptOut,
+  addEventListener: pushSubscriptionAddEventListener,
+  removeEventListener: pushSubscriptionRemoveEventListener,
 };
 
 const UserNamespace: IOneSignalUser = {
-	addAlias: userAddAlias,
-	addAliases: userAddAliases,
-	removeAlias: userRemoveAlias,
-	removeAliases: userRemoveAliases,
-	addEmail: userAddEmail,
-	removeEmail: userRemoveEmail,
-	addSms: userAddSms,
-	removeSms: userRemoveSms,
-	addTag: userAddTag,
-	addTags: userAddTags,
-	removeTag: userRemoveTag,
-	removeTags: userRemoveTags,
-	PushSubscription: PushSubscriptionNamespace,
+  addAlias: userAddAlias,
+  addAliases: userAddAliases,
+  removeAlias: userRemoveAlias,
+  removeAliases: userRemoveAliases,
+  addEmail: userAddEmail,
+  removeEmail: userRemoveEmail,
+  addSms: userAddSms,
+  removeSms: userRemoveSms,
+  addTag: userAddTag,
+  addTags: userAddTags,
+  removeTag: userRemoveTag,
+  removeTags: userRemoveTags,
+  PushSubscription: PushSubscriptionNamespace,
 };
 
 const SessionNamespace: IOneSignalSession = {
-	sendOutcome: sessionSendOutcome,
-	sendUniqueOutcome: sessionSendUniqueOutcome,
+  sendOutcome: sessionSendOutcome,
+  sendUniqueOutcome: sessionSendUniqueOutcome,
 };
 
 const DebugNamespace: IOneSignalDebug = {
-	setLogLevel: debugSetLogLevel,
+  setLogLevel: debugSetLogLevel,
 };
 
 const SlidedownNamespace: IOneSignalSlidedown = {
-	promptPush: slidedownPromptPush,
-	promptPushCategories: slidedownPromptPushCategories,
-	promptSms: slidedownPromptSms,
-	promptEmail: slidedownPromptEmail,
-	promptSmsAndEmail: slidedownPromptSmsAndEmail,
-	addEventListener: slidedownAddEventListener,
-	removeEventListener: slidedownRemoveEventListener,
+  promptPush: slidedownPromptPush,
+  promptPushCategories: slidedownPromptPushCategories,
+  promptSms: slidedownPromptSms,
+  promptEmail: slidedownPromptEmail,
+  promptSmsAndEmail: slidedownPromptSmsAndEmail,
+  addEventListener: slidedownAddEventListener,
+  removeEventListener: slidedownRemoveEventListener,
 };
 
 const NotificationsNamespace: IOneSignalNotifications = {
-	get permissionNative(): NotificationPermission { return window.OneSignal?.Notifications?.permissionNative ?? 'default'; },
-	get permission(): boolean { return window.OneSignal?.Notifications?.permission ?? false; },
-	setDefaultUrl: notificationsSetDefaultUrl,
-	setDefaultTitle: notificationsSetDefaultTitle,
-	isPushSupported,
-	requestPermission: notificationsRequestPermission,
-	addEventListener: notificationsAddEventListener,
-	removeEventListener: notificationsRemoveEventListener,
+  get permissionNative(): NotificationPermission {
+    return window.OneSignal?.Notifications?.permissionNative ?? 'default';
+  },
+  get permission(): boolean {
+    return window.OneSignal?.Notifications?.permission ?? false;
+  },
+  setDefaultUrl: notificationsSetDefaultUrl,
+  setDefaultTitle: notificationsSetDefaultTitle,
+  isPushSupported,
+  requestPermission: notificationsRequestPermission,
+  addEventListener: notificationsAddEventListener,
+  removeEventListener: notificationsRemoveEventListener,
 };
 
 const OneSignalNamespace: IOneSignalOneSignal = {
-	login: oneSignalLogin,
-	logout: oneSignalLogout,
-	init,
-	setConsentGiven: oneSignalSetConsentGiven,
-	setConsentRequired: oneSignalSetConsentRequired,
-	Slidedown: SlidedownNamespace,
-	Notifications: NotificationsNamespace,
-	Session: SessionNamespace,
-	User: UserNamespace,
-	Debug: DebugNamespace,
+  login: oneSignalLogin,
+  logout: oneSignalLogout,
+  init,
+  setConsentGiven: oneSignalSetConsentGiven,
+  setConsentRequired: oneSignalSetConsentRequired,
+  Slidedown: SlidedownNamespace,
+  Notifications: NotificationsNamespace,
+  Session: SessionNamespace,
+  User: UserNamespace,
+  Debug: DebugNamespace,
 };
 
 const OneSignal = OneSignalNamespace;

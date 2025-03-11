@@ -1,15 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
-import OneSignal from 'react-onesignal';
+import OneSignal from "react-onesignal";
+import "./App.css";
+import logo from "./logo.svg";
 
 function App() {
   try {
     OneSignal.init({
-      appId: "f5d104e9-7462-4bf7-adc8-4ca501cb55b2",
+      appId: "67b7b84e-ac1d-460f-8516-4876dadeeb7a",
     }).then(() => {
-      OneSignal.Debug.setLogLevel('trace');
-      OneSignal.login("rodrigo");
-      OneSignal.User.addAlias("myAlias", "1");
+      OneSignal.Debug.setLogLevel("trace");
+      OneSignal.login("Fadi 2");
     });
   } catch (e) {
     console.log(e);
