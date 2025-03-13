@@ -35,4 +35,4 @@ jobs:
               -p @semantic-release/github \
               -p @semantic-release/npm \
               -p conventional-changelog-conventionalcommits \
-              semantic-release --dry-run
+              semantic-release
