@@ -1,19 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
-import OneSignal from 'react-onesignal';
+import { useEffect } from "react";
+import OneSignal from "react-onesignal";
+import "./App.css";
+import logo from "./logo.svg";
 
 function App() {
-  try {
+  useEffect(() => {
     OneSignal.init({
-      appId: "f5d104e9-7462-4bf7-adc8-4ca501cb55b2",
+      appId: "<YOUR_APP_ID>",
     }).then(() => {
-      OneSignal.Debug.setLogLevel('trace');
-      OneSignal.login("rodrigo");
-      OneSignal.User.addAlias("myAlias", "1");
+      OneSignal.Debug.setLogLevel("trace");
     });
-  } catch (e) {
-    console.log(e);
-  }
+  }, []);
 
   return (
     <div className="App">

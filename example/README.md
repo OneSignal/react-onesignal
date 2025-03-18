@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Setup
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Run `npm install` then replace the string `<YOUR_APP_ID>` with your actual app id from the OneSignal dashboard project.
 
 ## Available Scripts
 
