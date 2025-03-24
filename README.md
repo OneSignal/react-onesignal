@@ -25,7 +25,7 @@ You can find more information on OneSignal [here](https://onesignal.com/).
 
 ### Migration Guides
 
-Versions 3.0 were recently released and include breaking changes. See the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/main/MigrationGuide.md) to update your implementation.
+Version 3.0 was recently released and includes breaking changes. See the [Migration Guide](https://github.com/OneSignal/react-onesignal/blob/main/MigrationGuide.md) to update your implementation.
 
 ## Contents
 
