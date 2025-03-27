@@ -24,8 +24,8 @@
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=22",
-    "npm": ">=10"
+    "node": ">=14",
+    "npm": ">=6"
   },
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
