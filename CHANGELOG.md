@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.1](https://github.com/OneSignal/react-onesignal/compare/3.2.0...3.2.1) (2025-03-27)
+
+### Bug Fixes
+
+* lower node engines range ([216c428](https://github.com/OneSignal/react-onesignal/commit/216c4280ecf1aea2722676e5f59f5797b75abbed))
+
 ## [3.2.0](https://github.com/OneSignal/react-onesignal/compare/3.1.1...3.2.0) (2025-03-24)
 
 ### Features
