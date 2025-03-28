@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.2](https://github.com/OneSignal/react-onesignal/compare/3.2.1...3.2.2) (2025-03-28)
+
+### Bug Fixes
+
+* add promise reject for init call ([daadfa8](https://github.com/OneSignal/react-onesignal/commit/daadfa8de3ba98a2b9bd81a497187c4ef07cbc30))
+* add promise reject for init call ([f951175](https://github.com/OneSignal/react-onesignal/commit/f9511751b930cc65ec78e355f07056c54ac997be))
+
 ## [3.2.1](https://github.com/OneSignal/react-onesignal/compare/3.2.0...3.2.1) (2025-03-27)
 
 ### Bug Fixes
