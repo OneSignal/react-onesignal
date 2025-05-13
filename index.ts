@@ -128,6 +128,7 @@ export type SubscriptionChangeEvent = { previous: PushSubscriptionNamespacePrope
 export type NotificationEventName = 'click' | 'foregroundWillDisplay' | 'dismiss' | 'permissionChange' | 'permissionPromptDisplay';
 export type SlidedownEventName = 'slidedownAllowClick' | 'slidedownCancelClick' | 'slidedownClosed' | 'slidedownQueued' | 'slidedownShown';
 export type OneSignalDeferredLoadedCallback = (onesignal: IOneSignalOneSignal) => void;
+export type IOneSignalTags = { [key: string]: string };
 export interface IOSNotification {
   /**
    * The OneSignal notification id;
@@ -501,10 +502,10 @@ export interface IOneSignalUser {
 	addSms(smsNumber: string): void;
 	removeSms(smsNumber: string): void;
 	addTag(key: string, value: string): void;
-	addTags(tags: { [key: string]: string }): void;
+	addTags(tags: IOneSignalTags): void;
 	removeTag(key: string): void;
 	removeTags(keys: string[]): void;
-	getTags(): { [key: string]: string };
+	getTags(): Promise<IOneSignalTags>;
 	addEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
 	removeEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
 	setLanguage(language: string): void;
@@ -869,12 +870,12 @@ function userRemoveTags(keys: string[]): void {
   });
   
 }
-function userGetTags(): { [key: string]: string } {
-  let retVal: { [key: string]: string };
-  window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
-    retVal = OneSignal.User.getTags();
+function userGetTags(): ReturnType<IOneSignalUser["getTags"]> {
+  return new Promise((resolve) => {
+    window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
+      resolve(OneSignal.User.getTags());
+    });
   });
-  return retVal;
 }
 function userAddEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void {
   
