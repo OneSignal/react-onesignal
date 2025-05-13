@@ -45,10 +45,6 @@
               "release": "patch"
             },
             {
-              "type": "ci",
-              "release": "patch"
-            },
-            {
               "type": "chore",
               "scope": "deps",
               "release": "patch"
