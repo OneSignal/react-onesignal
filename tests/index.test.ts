@@ -1,4 +1,6 @@
-import OneSignal from './index';
+import OneSignal from '../index';
+
+declare const global: typeof globalThis;
 
 const originalDocument = global.document;
 const documentSpy = vi.spyOn(global, 'document', 'get');

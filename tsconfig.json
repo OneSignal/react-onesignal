@@ -17,9 +17,8 @@
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
-    "skipLibCheck": true,
-    "types": ["vitest/globals"]
+    "skipLibCheck": true
   },
-  "include": ["index.ts", "index.test.ts"],
+  "include": ["index.ts"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
 }
