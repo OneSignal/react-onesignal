@@ -107,6 +107,11 @@ const init = (options: IInitObject): Promise<void> => {
     return Promise.reject(`Document is not defined.`);
   }
 
+  // Handle both disabled and disable keys for welcome notification
+  if (options.welcomeNotification?.disabled !== undefined) {
+    options.welcomeNotification.disable = options.welcomeNotification.disabled;
+  }
+
   return new Promise<void>((resolve, reject) => {
     window.OneSignalDeferred?.push((OneSignal) => {
       OneSignal.init(options)
@@ -332,8 +337,14 @@ export interface IInitObject {
   welcomeNotification?: {
     /**
      * Disables sending a welcome notification to new site visitors. If you want to disable welcome notifications, this is the only option you need.
+     * @deprecated Use 'disable' instead. This will be removed in a future version.
      */
     disabled?: boolean;
+
+    /**
+     * Disables sending a welcome notification to new site visitors. If you want to disable welcome notifications, this is the only option you need.
+     */
+    disable?: boolean;
 
     /**
      * The welcome notification's message. You can localize this to your own language.
@@ -351,7 +362,7 @@ export interface IInitObject {
      * By default, clicking the welcome notification does not open any link.
      * This is recommended because the user has just visited your site and subscribed.
      */
-    url: string;
+    url?: string;
   };
 
   /**
@@ -482,7 +493,7 @@ export interface IOneSignalSlidedown {
 	removeEventListener(event: SlidedownEventName, listener: (wasShown: boolean) => void): void;
 }
 export interface IOneSignalDebug {
-	setLogLevel(logLevel: string): void;
+	setLogLevel(logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error'): void;
 }
 export interface IOneSignalSession {
 	sendOutcome(outcomeName: string, outcomeWeight?: number): Promise<void>;
@@ -952,7 +963,7 @@ function pushSubscriptionRemoveEventListener(event: 'change', listener: (change:
   });
   
 }
-function debugSetLogLevel(logLevel: string): void {
+function debugSetLogLevel(logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error'): void {
   
   window.OneSignalDeferred?.push((OneSignal: IOneSignalOneSignal) => {
     OneSignal.Debug.setLogLevel(logLevel);
