@@ -18,3 +18,9 @@ build
 
 npm-debug.log*
 example
+
+.github
+.releaserc.json
+
+.eslintignore
+.gitignore
