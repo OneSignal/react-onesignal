@@ -1,7 +1,7 @@
 import OneSignal from './index';
 
-const originalDocument = global.document;
-const documentSpy = vi.spyOn(global, 'document', 'get');
+const originalDocument = window.document;
+const documentSpy = vi.spyOn(window, 'document', 'get');
 
 const APP_ID = '123456';
 
