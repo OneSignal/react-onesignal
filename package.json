@@ -1,8 +1,7 @@
 {
   "name": "react-onesignal",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "React OneSignal Module: Make it easy to integrate OneSignal with your React App!",
-  "type": "module",
   "contributors": [
     {
       "name": "Rodrigo Gomez-Palacio"
@@ -20,9 +19,16 @@
   "homepage": "https://onesignal.com",
   "repository": "https://github.com/OneSignal/react-onesignal.git",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "engines": {
     "node": ">=14",
     "npm": ">=6"
