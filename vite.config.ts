@@ -10,9 +10,9 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: (format) => {
         if (format === 'es') {
-          return 'index.es.js';
+          return 'index.js';
         }
-        return 'index.js';
+        return 'index.cjs';
       },
     },
   },
