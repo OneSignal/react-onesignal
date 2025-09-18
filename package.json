@@ -35,7 +35,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "prepare": "npm run lint && npm run test && npm run build"
   },
