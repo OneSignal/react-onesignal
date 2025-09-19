@@ -1,0 +1,470 @@
+const u = "onesignal-sdk", l = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+let d = !1, s = !1;
+typeof window < "u" && (window.OneSignalDeferred = window.OneSignalDeferred || [], c());
+function f() {
+  s = !0;
+}
+function c() {
+  const n = document.createElement("script");
+  n.id = u, n.defer = !0, n.src = l, n.onerror = () => {
+    f();
+  }, document.head.appendChild(n);
+}
+function w() {
+  return g() || S();
+}
+function p() {
+  return window.top !== window && // isContextIframe
+  navigator.vendor === "Apple Computer, Inc." && // isSafari
+  navigator.platform === "MacIntel";
+}
+function S() {
+  return window.safari && typeof window.safari.pushNotification < "u" || p();
+}
+function g() {
+  return typeof PushSubscriptionOptions < "u" && PushSubscriptionOptions.prototype.hasOwnProperty("applicationServerKey");
+}
+const m = () => w(), h = (n) => {
+  var e;
+  return d ? Promise.reject("OneSignal is already initialized.") : !n || !n.appId ? Promise.reject("You need to provide your OneSignal appId.") : document ? (((e = n.welcomeNotification) == null ? void 0 : e.disabled) !== void 0 && (n.welcomeNotification.disable = n.welcomeNotification.disabled), new Promise((i, r) => {
+    var t;
+    (t = window.OneSignalDeferred) == null || t.push((o) => {
+      o.init(n).then(() => {
+        d = !0, i();
+      }).catch(r);
+    });
+  })) : Promise.reject("Document is not defined.");
+};
+function O(n, e) {
+  return new Promise((i, r) => {
+    var t;
+    if (s) {
+      r(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (t = window.OneSignalDeferred) == null || t.push((o) => {
+      o.login(n, e).then(() => i()).catch((a) => r(a));
+    });
+  });
+}
+function v() {
+  return new Promise((n, e) => {
+    var i;
+    if (s) {
+      e(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (i = window.OneSignalDeferred) == null || i.push((r) => {
+      r.logout().then(() => n()).catch((t) => e(t));
+    });
+  });
+}
+function E(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.setConsentGiven(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function D(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.setConsentRequired(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function P(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Slidedown.promptPush(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function L(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Slidedown.promptPushCategories(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function U(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Slidedown.promptSms(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function A(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Slidedown.promptEmail(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function N(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Slidedown.promptSmsAndEmail(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function b(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.Slidedown.addEventListener(n, e);
+  });
+}
+function I(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.Slidedown.removeEventListener(n, e);
+  });
+}
+function T(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Notifications.setDefaultUrl(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function R(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Notifications.setDefaultTitle(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function C() {
+  return new Promise((n, e) => {
+    var i;
+    if (s) {
+      e(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (i = window.OneSignalDeferred) == null || i.push((r) => {
+      r.Notifications.requestPermission().then((t) => n(t)).catch((t) => e(t));
+    });
+  });
+}
+function y(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.Notifications.addEventListener(n, e);
+  });
+}
+function q(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.Notifications.removeEventListener(n, e);
+  });
+}
+function k(n, e) {
+  return new Promise((i, r) => {
+    var t;
+    if (s) {
+      r(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (t = window.OneSignalDeferred) == null || t.push((o) => {
+      o.Session.sendOutcome(n, e).then(() => i()).catch((a) => r(a));
+    });
+  });
+}
+function G(n) {
+  return new Promise((e, i) => {
+    var r;
+    if (s) {
+      i(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (r = window.OneSignalDeferred) == null || r.push((t) => {
+      t.Session.sendUniqueOutcome(n).then(() => e()).catch((o) => i(o));
+    });
+  });
+}
+function _(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.addAlias(n, e);
+  });
+}
+function K(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.addAliases(n);
+  });
+}
+function x(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeAlias(n);
+  });
+}
+function V(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeAliases(n);
+  });
+}
+function z(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.addEmail(n);
+  });
+}
+function M(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeEmail(n);
+  });
+}
+function F(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.addSms(n);
+  });
+}
+function Y(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeSms(n);
+  });
+}
+function B(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.addTag(n, e);
+  });
+}
+function H(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.addTags(n);
+  });
+}
+function J(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeTag(n);
+  });
+}
+function Q(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.removeTags(n);
+  });
+}
+async function W() {
+  var e;
+  let n;
+  return await ((e = window.OneSignalDeferred) == null ? void 0 : e.push((i) => {
+    n = i.User.getTags();
+  })), n;
+}
+function X(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.addEventListener(n, e);
+  });
+}
+function Z(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.removeEventListener(n, e);
+  });
+}
+function $(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.User.setLanguage(n);
+  });
+}
+async function j() {
+  var e;
+  let n;
+  return await ((e = window.OneSignalDeferred) == null ? void 0 : e.push((i) => {
+    n = i.User.getLanguage();
+  })), n;
+}
+function ee(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.trackEvent(n, e);
+  });
+}
+function ne() {
+  return new Promise((n, e) => {
+    var i;
+    if (s) {
+      e(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (i = window.OneSignalDeferred) == null || i.push((r) => {
+      r.User.PushSubscription.optIn().then(() => n()).catch((t) => e(t));
+    });
+  });
+}
+function ie() {
+  return new Promise((n, e) => {
+    var i;
+    if (s) {
+      e(new Error("OneSignal script failed to load."));
+      return;
+    }
+    (i = window.OneSignalDeferred) == null || i.push((r) => {
+      r.User.PushSubscription.optOut().then(() => n()).catch((t) => e(t));
+    });
+  });
+}
+function re(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.PushSubscription.addEventListener(n, e);
+  });
+}
+function te(n, e) {
+  var i;
+  (i = window.OneSignalDeferred) == null || i.push((r) => {
+    r.User.PushSubscription.removeEventListener(n, e);
+  });
+}
+function oe(n) {
+  var e;
+  (e = window.OneSignalDeferred) == null || e.push((i) => {
+    i.Debug.setLogLevel(n);
+  });
+}
+const se = {
+  get id() {
+    var n, e, i;
+    return (i = (e = (n = window.OneSignal) == null ? void 0 : n.User) == null ? void 0 : e.PushSubscription) == null ? void 0 : i.id;
+  },
+  get token() {
+    var n, e, i;
+    return (i = (e = (n = window.OneSignal) == null ? void 0 : n.User) == null ? void 0 : e.PushSubscription) == null ? void 0 : i.token;
+  },
+  get optedIn() {
+    var n, e, i;
+    return (i = (e = (n = window.OneSignal) == null ? void 0 : n.User) == null ? void 0 : e.PushSubscription) == null ? void 0 : i.optedIn;
+  },
+  optIn: ne,
+  optOut: ie,
+  addEventListener: re,
+  removeEventListener: te
+}, ae = {
+  get onesignalId() {
+    var n, e;
+    return (e = (n = window.OneSignal) == null ? void 0 : n.User) == null ? void 0 : e.onesignalId;
+  },
+  get externalId() {
+    var n, e;
+    return (e = (n = window.OneSignal) == null ? void 0 : n.User) == null ? void 0 : e.externalId;
+  },
+  addAlias: _,
+  addAliases: K,
+  removeAlias: x,
+  removeAliases: V,
+  addEmail: z,
+  removeEmail: M,
+  addSms: F,
+  removeSms: Y,
+  addTag: B,
+  addTags: H,
+  removeTag: J,
+  removeTags: Q,
+  getTags: W,
+  addEventListener: X,
+  removeEventListener: Z,
+  setLanguage: $,
+  getLanguage: j,
+  trackEvent: ee,
+  PushSubscription: se
+}, de = {
+  sendOutcome: k,
+  sendUniqueOutcome: G
+}, ue = {
+  setLogLevel: oe
+}, le = {
+  promptPush: P,
+  promptPushCategories: L,
+  promptSms: U,
+  promptEmail: A,
+  promptSmsAndEmail: N,
+  addEventListener: b,
+  removeEventListener: I
+}, fe = {
+  get permissionNative() {
+    var n, e;
+    return ((e = (n = window.OneSignal) == null ? void 0 : n.Notifications) == null ? void 0 : e.permissionNative) ?? "default";
+  },
+  get permission() {
+    var n, e;
+    return ((e = (n = window.OneSignal) == null ? void 0 : n.Notifications) == null ? void 0 : e.permission) ?? !1;
+  },
+  setDefaultUrl: T,
+  setDefaultTitle: R,
+  isPushSupported: m,
+  requestPermission: C,
+  addEventListener: y,
+  removeEventListener: q
+}, ce = {
+  login: O,
+  logout: v,
+  init: h,
+  setConsentGiven: E,
+  setConsentRequired: D,
+  Slidedown: le,
+  Notifications: fe,
+  Session: de,
+  User: ae,
+  Debug: ue
+}, we = ce;
+export {
+  we as default
+};
+//# sourceMappingURL=index.js.map

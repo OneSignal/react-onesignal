@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.0](https://github.com/OneSignal/react-onesignal/compare/3.3.0...3.4.0) (2025-09-19)
+
+### Features
+
+* add new custom events `trackEvent` method ([40deef9](https://github.com/OneSignal/react-onesignal/commit/40deef97f9a52440f23457ecd0509e5821151820))
+
 ## [3.3.0](https://github.com/OneSignal/react-onesignal/compare/3.2.3...3.3.0) (2025-09-11)
 
 ### Features
