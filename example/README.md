@@ -1,6 +1,74 @@
-# Setup
+# OneSignal React SDK Test App
 
-Run `npm install` then replace the string `<YOUR_APP_ID>` with your actual app id from the OneSignal dashboard project.
+This example app demonstrates the comprehensive functionality of the OneSignal React SDK with an interactive testing interface.
+
+## Setup
+
+1. Run `npm install`
+2. Replace the string `<YOUR_APP_ID>` with your actual app ID from the OneSignal dashboard project
+3. Run `npm start` to launch the development server
+
+## Features
+
+The test app includes interactive sections for:
+
+### Configuration
+
+- Set your OneSignal App ID
+- Real-time status display showing initialization state, permissions, and user data
+
+### User Authentication
+
+- Login with external ID and optional JWT token
+- Logout functionality
+- Display current user state (OneSignal ID, External ID)
+
+### Tags Management
+
+- Add custom tags with key-value pairs
+- View all current tags
+- Remove individual tags
+- Real-time tag display updates
+
+### Event Tracking
+
+- Track custom events with optional properties
+- JSON format support for event properties
+- Activity logging for all tracked events
+
+### Push Notifications
+
+- Request notification permissions
+- Opt in/out of push notifications
+- Trigger slidedown prompts
+- View permission status
+
+### User Profile Management
+
+- Add/remove email addresses
+- Add/remove SMS numbers
+- Set user language preferences
+- Real-time profile updates
+
+### Session Outcomes
+
+- Send custom outcomes with optional weights
+- Track user engagement metrics
+
+### Activity Logging
+
+- Real-time activity log with timestamps
+- Error handling and success messages
+- Scrollable log container with recent activity
+
+## Usage
+
+1. Enter your OneSignal App ID in the Configuration section
+2. Use the various sections to test different OneSignal features
+3. Monitor the Activity Log to see real-time feedback
+4. Check the Status section to view current OneSignal state
+
+The app provides a comprehensive testing environment for all OneSignal React SDK features, making it easy to verify functionality during development.
 
 ## Available Scripts
 
