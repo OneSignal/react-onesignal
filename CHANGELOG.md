@@ -1,5 +1,7 @@
 # Changelog
 
+## [3.4.1](https://github.com/OneSignal/react-onesignal/compare/3.4.0...3.4.1) (2025-12-26)
+
 ## [3.4.0](https://github.com/OneSignal/react-onesignal/compare/3.3.0...3.4.0) (2025-09-19)
 
 ### Features
