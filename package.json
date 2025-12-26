@@ -53,11 +53,7 @@
     "vitest": "^3.0.9"
   },
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md",
-    "MigrationGuide.md"
+    "dist"
   ],
   "keywords": [
     "onesignal",
