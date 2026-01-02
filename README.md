@@ -83,6 +83,7 @@ OneSignal.init({ appId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }).then(() => {
 ```
 
 ### Init Options
+
 You can pass other [options](https://documentation.onesignal.com/docs/web-sdk-reference#init) to the `init` function. Use these options to configure personalized prompt options, auto-resubscribe, and more.
 
 <details>
@@ -109,7 +110,7 @@ You can pass other [options](https://documentation.onesignal.com/docs/web-sdk-re
 | `[key: string]`                  | `any`                | Additional properties can be added as needed.            |
 
 **Service Worker Params**
-You can customize the location and filenames of service worker assets. You are also able to specify the specific scope that your service worker should control. You can read more [here](https://documentation.onesignal.com/docs/onesignal-service-worker-faq#sdk-parameter-reference-for-service-workers).
+You can customize the location and filenames of service worker assets. You are also able to specify the specific scope that your service worker should control. You can read more [here](https://documentation.onesignal.com/docs/onesignal-service-worker#custom-code-setup).
 
 In this distribution, you can specify the parameters via the following:
 
@@ -124,7 +125,7 @@ In this distribution, you can specify the parameters via the following:
 
 ### Service Worker File
 
-If you haven't done so already, you will need to add the [OneSignal Service Worker file](https://github.com/OneSignal/OneSignal-Website-SDK/files/11480764/OneSignalSDK-v16-ServiceWorker.zip) to your site ([learn more](https://documentation.onesignal.com/docs/web-push-quickstart#step-6-upload-files)).
+If you haven't done so already, you will need to add the [OneSignal Service Worker file](https://github.com/OneSignal/OneSignal-Website-SDK/files/11480764/OneSignalSDK-v16-ServiceWorker.zip) to your site ([learn more](https://documentation.onesignal.com/docs/onesignal-service-worker#upload-the-js-file-to-your-server)).
 
 The OneSignal SDK file must be publicly accessible. You can put them in your top-level root or a subdirectory. However, if you are placing the file not on top-level root make sure to specify the path via the service worker params in the init options (see section above).
 
@@ -194,9 +195,7 @@ OneSignal.Notifications.addEventListener('click', (event) => {
 });
 ```
 
-
-
-See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-sdk-reference#addeventlistener-push-notification) for all available event listeners.
+See the [OneSignal WebSDK Reference](https://documentation.onesignal.com/docs/web-sdk-reference#addeventlistener-notifications) for all available event listeners.
 
 ## Troubleshooting
 
