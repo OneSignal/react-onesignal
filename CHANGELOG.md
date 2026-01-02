@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.5](https://github.com/OneSignal/react-onesignal/compare/3.4.4...3.4.5) (2026-01-02)
+
+### Build System
+
+* sync with web-shim-codegen v3.0.8 ([a3cab70](https://github.com/OneSignal/react-onesignal/commit/a3cab70b91544a032ea27459d002aebb2703731b))
+
 ## [3.4.4](https://github.com/OneSignal/react-onesignal/compare/3.4.3...3.4.4) (2025-12-26)
 
 ### Build System
