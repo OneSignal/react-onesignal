@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.6](https://github.com/OneSignal/react-onesignal/compare/3.4.5...3.4.6) (2026-01-05)
+
+### Bug Fixes
+
+* update init object interface ([629ce43](https://github.com/OneSignal/react-onesignal/commit/629ce4321d2ed714ad06c49727540cd8b0451894))
+
 ## [3.4.5](https://github.com/OneSignal/react-onesignal/compare/3.4.4...3.4.5) (2026-01-02)
 
 ### Build System
