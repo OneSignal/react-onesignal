@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.0](https://github.com/OneSignal/react-onesignal/compare/3.4.6...3.5.0) (2026-02-25)
+
+### Features
+
+* add support for overriding OneSignal script src ([0460a81](https://github.com/OneSignal/react-onesignal/commit/0460a816bbe7012bb72c5a480142a0501a08d51e))
+
 ## [3.4.6](https://github.com/OneSignal/react-onesignal/compare/3.4.5...3.4.6) (2026-01-05)
 
 ### Bug Fixes
