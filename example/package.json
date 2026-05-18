@@ -8,12 +8,14 @@
     "@types/react-dom": "^19.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-onesignal": "file:../",
+    "react-onesignal": "file:./react-onesignal.tgz",
     "typescript": "^5.8.2",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "vite"
+    "setup": "./scripts/setup.sh",
+    "prestart": "vp run setup",
+    "start": "vp dev"
   },
   "browserslist": {
     "production": [
@@ -28,7 +30,8 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.2.1"
-  }
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite-plugin-mkcert": "^2.0.0"
+  },
+  "packageManager": "bun@1.3.13"
 }

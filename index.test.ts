@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest';
 import OneSignal from './index';
 
 const originalDocument = window.document;
@@ -20,6 +21,7 @@ Object.defineProperty(window.OneSignalDeferred, 'push', {
 describe('React OneSignal', () => {
   test('init method', async () => {
     // no document error
+    // @ts-expect-error - simulating missing document
     documentSpy.mockReturnValue(undefined);
     await expect(OneSignal.init({ appId: APP_ID })).rejects.toThrow(
       'Document is not defined.',

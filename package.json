@@ -30,27 +30,22 @@
     }
   },
   "engines": {
-    "node": ">=14",
-    "npm": ">=6"
+    "node": ">=18"
   },
   "scripts": {
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build": "tsc --noEmit && vite build",
-    "test": "vitest run",
-    "prepare": "npm run lint && npm run test && npm run build"
+    "lint": "vp lint",
+    "test": "vp test",
+    "build": "vp pack"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.1.21",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@0.1.21"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "7.37.4",
+    "@vitest/coverage-v8": "^4.1.6",
     "jsdom": "^26.0.0",
-    "typescript": "^5.8.2",
-    "vite": "^6.2.1",
-    "vite-plugin-dts": "^4.5.3",
-    "vitest": "^3.0.9"
+    "typescript": "^6.0.3",
+    "vite-plus": "0.1.21"
   },
   "files": [
     "dist"
@@ -61,5 +56,6 @@
     "notification",
     "push notification",
     "react"
-  ]
+  ],
+  "packageManager": "bun@1.3.13"
 }

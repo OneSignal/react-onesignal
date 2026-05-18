@@ -1,20 +1,33 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
-  build: {
-    sourcemap: true,
-    lib: {
-      entry: './index.ts',
-      name: 'react-onesignal',
-      formats: ['es', 'cjs'],
-      fileName: (format) => {
-        if (format === 'es') {
-          return 'index.js';
-        }
-        return 'index.cjs';
-      },
+  staged: {
+    '*': 'vp check --fix',
+  },
+  fmt: {
+    ignorePatterns: ['dist', 'example', 'node_modules'],
+    singleQuote: true,
+    sortImports: {
+      enabled: true,
     },
   },
-  plugins: [dts()],
+  lint: {
+    ignorePatterns: ['dist', 'example', 'node_modules'],
+    rules: {
+      'typescript/require-await': 'error',
+    },
+    options: { typeAware: true, typeCheck: true },
+  },
+  test: {
+    environment: 'jsdom',
+  },
+  pack: {
+    entry: 'index.ts',
+    format: ['esm', 'cjs'],
+    dts: true,
+    sourcemap: true,
+    outExtensions: ({ format }) => ({
+      js: format === 'cjs' ? '.cjs' : '.js',
+    }),
+  },
 });
