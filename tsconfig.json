@@ -7,7 +7,7 @@
     "sourceMap": true,
     "allowJs": true,
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -16,10 +16,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "skipLibCheck": true,
-    "types": ["vitest/globals"]
+    "skipLibCheck": true
   },
-  "include": ["index.ts", "index.test.ts"],
-  "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
+  "include": ["index.ts"],
+  "exclude": ["node_modules", "build", "dist", "example", "**/*.test.ts"]
 }
