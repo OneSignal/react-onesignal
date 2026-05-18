@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.2](https://github.com/OneSignal/react-onesignal/compare/3.5.1...3.5.2) (2026-05-18)
+
+### Build System
+
+* migrate to vite-plus toolchain ([f9c5c88](https://github.com/OneSignal/react-onesignal/commit/f9c5c8860637e48411e11a1f56f82608c1a55b34))
+
 ## [3.5.1](https://github.com/OneSignal/react-onesignal/compare/3.5.0...3.5.1) (2026-02-27)
 
 ### Build System
