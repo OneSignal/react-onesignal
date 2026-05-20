@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.3](https://github.com/OneSignal/react-onesignal/compare/3.5.2...3.5.3) (2026-05-20)
+
+### Bug Fixes
+
+* publish missing dist files ([ba7cbab](https://github.com/OneSignal/react-onesignal/commit/ba7cbabc5c150492dda91e3d72c7125dbb896862))
+
 ## [3.5.2](https://github.com/OneSignal/react-onesignal/compare/3.5.1...3.5.2) (2026-05-18)
 
 ### Build System
