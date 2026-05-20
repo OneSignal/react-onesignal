@@ -36,6 +36,9 @@ jobs:
             conventional-changelog-conventionalcommits \
             -- --no-save
 
+      - name: Build
+        run: vp run build
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
