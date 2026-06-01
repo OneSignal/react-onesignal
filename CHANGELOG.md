@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.4](https://github.com/OneSignal/react-onesignal/compare/3.5.3...3.5.4) (2026-06-01)
+
+### Bug Fixes
+
+* reject init() when push is unsupported or script fails to load ([e48bd59](https://github.com/OneSignal/react-onesignal/commit/e48bd59d41791a714d8c21fad5d3b60c2b998d51))
+
 ## [3.5.3](https://github.com/OneSignal/react-onesignal/compare/3.5.2...3.5.3) (2026-05-20)
 
 ### Bug Fixes
