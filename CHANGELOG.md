@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.5.5](https://github.com/OneSignal/react-onesignal/compare/3.5.4...3.5.5) (2026-06-03)
+
+### Bug Fixes
+
+* [SDK-4744] remove stale package-lock.json pinning vulnerable vitest ([b1bcd86](https://github.com/OneSignal/react-onesignal/commit/b1bcd8690b48d846be905ec03023ed074e84f564))
+
 ## [3.5.4](https://github.com/OneSignal/react-onesignal/compare/3.5.3...3.5.4) (2026-06-01)
 
 ### Bug Fixes
