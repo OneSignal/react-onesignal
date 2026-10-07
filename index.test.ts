@@ -60,6 +60,48 @@ describe('React OneSignal', () => {
   });
 });
 
+describe('identity guards', () => {
+  const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+  beforeEach(() => {
+    error.mockClear();
+  });
+
+  test('login rejects empty and a null byte and keeps whitespace', async () => {
+    const login = vi.fn().mockResolvedValue(undefined);
+    window.OneSignal = { login } as unknown as typeof window.OneSignal;
+    await OneSignal.login('');
+    await OneSignal.login('ab\u0000c');
+    await OneSignal.login(' user ');
+    expect(login).toHaveBeenCalledTimes(1);
+    expect(login).toHaveBeenCalledWith(' user ', undefined);
+    expect(error).toHaveBeenCalledWith('[OneSignal] login: externalId is required');
+    expect(error).toHaveBeenCalledWith('[OneSignal] login: externalId contains a null byte');
+  });
+
+  test('empty tag values are kept and a null byte in a key is rejected', () => {
+    const addTag = vi.fn();
+    const addTags = vi.fn();
+    const setLanguage = vi.fn();
+    window.OneSignal = {
+      User: { addTag, addTags, setLanguage },
+    } as unknown as typeof window.OneSignal;
+    OneSignal.User.addTag('kept', '');
+    OneSignal.User.addTag('nul-value', 'a\u0000b');
+    OneSignal.User.addTag('', 'nope');
+    OneSignal.User.addTags({ '\u0000': 'nope', sibling: 'nope' });
+    OneSignal.User.addTags({ ok: null as unknown as string });
+    OneSignal.User.setLanguage('');
+    OneSignal.User.setLanguage('en\u0000');
+    expect(addTag).toHaveBeenCalledTimes(2);
+    expect(addTag).toHaveBeenCalledWith('kept', '');
+    expect(addTag).toHaveBeenCalledWith('nul-value', 'a\u0000b');
+    expect(addTags).not.toHaveBeenCalled();
+    expect(setLanguage).toHaveBeenCalledTimes(1);
+    expect(setLanguage).toHaveBeenCalledWith('');
+  });
+});
+
 describe('init() rejects instead of hanging', () => {
   let OneSignalModule: typeof import('./index').default;
 

@@ -83,6 +83,50 @@ function supportsVapidPush(): boolean {
 }
 /* E N D */
 
+function isMissing(value: unknown, api: string): boolean {
+  // A NUL cannot be stored in a text column, so it is never a usable value.
+  if (typeof value === 'string' && value.includes('\u0000')) {
+    console.error(`[OneSignal] ${api} contains a null byte`);
+    return true;
+  }
+  if (typeof value === 'string' && value.length > 0) return false;
+  console.error(`[OneSignal] ${api} is required`);
+  return true;
+}
+
+function hasMissingEntries(
+  values: unknown,
+  api: string,
+  allowEmptyValue = false,
+): boolean {
+  if (typeof values !== 'object' || values === null || Array.isArray(values)) {
+    return isMissing(values, api);
+  }
+  return Object.entries(values as Record<string, unknown>).some(([key, item]) => {
+    if (isMissing(key, `${api}: key`)) return true;
+    if (allowEmptyValue) return item == null && isMissing(item, `${api}: value`);
+    return isMissing(item, `${api}: value`);
+  });
+}
+
+function hasMissingItems(values: unknown, api: string): boolean {
+  if (!Array.isArray(values)) return isMissing(values, api);
+  return values.some((value) => isMissing(value, api));
+}
+
+function keepsLanguage(language: unknown): boolean {
+  if (typeof language !== 'string') {
+    console.error('[OneSignal] setLanguage: language is required');
+    return false;
+  }
+  if (language.includes('\u0000')) {
+    console.error('[OneSignal] setLanguage: language contains a null byte');
+    return false;
+  }
+  return true;
+}
+
+
 /**
  * This is a SPECIAL FUNCTION
  * It is a hardcoded implementation copied from the upstream/native WebSDK since we want to return a boolean immediately
@@ -101,7 +145,7 @@ const init = (options: IInitObject): Promise<void> => {
     return Promise.reject(`OneSignal is already initialized.`);
   }
 
-  if (!options || !options.appId) {
+  if (!options || !options.appId || isMissing(options.appId, 'init: appId')) {
     return Promise.reject('You need to provide your OneSignal appId.');
   }
 
@@ -559,6 +603,8 @@ export interface IOneSignalPushSubscription {
 	removeEventListener(event: 'change', listener: (change: SubscriptionChangeEvent) => void): void;
 }
 function oneSignalLogin(externalId: string, jwtToken?: string): Promise<void> {
+  if (isMissing(externalId, 'login: externalId')) return Promise.resolve();
+
   return new Promise((resolve, reject) => {
     if (isOneSignalScriptFailed) {
       reject(new Error('OneSignal script failed to load.'));
@@ -783,84 +829,97 @@ function sessionSendUniqueOutcome(outcomeName: string): Promise<void> {
   });
 }
 function userAddAlias(label: string, id: string): void {
-  
+  if (isMissing(label, 'addAlias: label') || isMissing(id, 'addAlias: id')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addAlias(label, id);
   });
   
 }
 function userAddAliases(aliases: { [key: string]: string }): void {
-  
+  if (hasMissingEntries(aliases, 'addAliases')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addAliases(aliases);
   });
   
 }
 function userRemoveAlias(label: string): void {
-  
+  if (isMissing(label, 'removeAlias: label')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeAlias(label);
   });
   
 }
 function userRemoveAliases(labels: string[]): void {
-  
+  if (hasMissingItems(labels, 'removeAliases: label')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeAliases(labels);
   });
   
 }
 function userAddEmail(email: string): void {
-  
+  if (isMissing(email, 'addEmail: email')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addEmail(email);
   });
   
 }
 function userRemoveEmail(email: string): void {
-  
+  if (isMissing(email, 'removeEmail: email')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeEmail(email);
   });
   
 }
 function userAddSms(smsNumber: string): void {
-  
+  if (isMissing(smsNumber, 'addSms: smsNumber')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addSms(smsNumber);
   });
   
 }
 function userRemoveSms(smsNumber: string): void {
-  
+  if (isMissing(smsNumber, 'removeSms: smsNumber')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeSms(smsNumber);
   });
   
 }
 function userAddTag(key: string, value: string): void {
-  
+  if (isMissing(key, 'addTag: key')) return;
+  if (value == null && isMissing(value, 'addTag: value')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addTag(key, value);
   });
   
 }
 function userAddTags(tags: { [key: string]: string }): void {
-  
+  if (hasMissingEntries(tags, 'addTags', true)) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addTags(tags);
   });
   
 }
 function userRemoveTag(key: string): void {
-  
+  if (isMissing(key, 'removeTag: key')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeTag(key);
   });
   
 }
 function userRemoveTags(keys: string[]): void {
-  
+  if (hasMissingItems(keys, 'removeTags: key')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeTags(keys);
   });
@@ -889,7 +948,8 @@ function userRemoveEventListener(event: 'change', listener: (change: UserChangeE
   
 }
 function userSetLanguage(language: string): void {
-  
+  if (!keepsLanguage(language)) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.setLanguage(language);
   });
@@ -904,7 +964,8 @@ async function userGetLanguage(): string {
   return retVal;
 }
 function userTrackEvent(name: string, properties?: Record<string, unknown>): void {
-  
+  if (isMissing(name, 'trackEvent: name')) return;
+
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.trackEvent(name, properties);
   });
