@@ -267,6 +267,14 @@ export interface NotificationClickEvent {
 export type UserChangeEvent = {
   current: UserNamespaceProperties;
 };
+export type UserJwtInvalidatedEvent = {
+  externalId: string;
+};
+export type UserEventName = 'change' | 'userJwtInvalidated';
+export type UserEventTypeMap = {
+  change: UserChangeEvent;
+  userJwtInvalidated: UserJwtInvalidatedEvent;
+};
 export type UserNamespaceProperties = {
   onesignalId: string | undefined;
   externalId: string | undefined;
@@ -496,6 +504,7 @@ export interface IOneSignalOneSignal {
 	Debug: IOneSignalDebug;
 	login(externalId: string, jwtToken?: string): Promise<void>;
 	logout(): Promise<void>;
+	updateUserJwt(externalId: string, token: string): Promise<void>;
 	init(options: IInitObject): Promise<void>;
 	setConsentGiven(consent: boolean): Promise<void>;
 	setConsentRequired(requiresConsent: boolean): Promise<void>;
@@ -543,8 +552,8 @@ export interface IOneSignalUser {
 	removeTag(key: string): void;
 	removeTags(keys: string[]): void;
 	getTags(): { [key: string]: string };
-	addEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
-	removeEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void;
+	addEventListener<K extends UserEventName>(event: K, listener: (obj: UserEventTypeMap[K]) => void): void;
+	removeEventListener<K extends UserEventName>(event: K, listener: (obj: UserEventTypeMap[K]) => void): void;
 	setLanguage(language: string): void;
 	getLanguage(): string;
 	trackEvent(name: string, properties?: Record<string, unknown>): void;
@@ -581,6 +590,20 @@ function oneSignalLogout(): Promise<void> {
 
     window.OneSignalDeferred?.push((OneSignal) => {
       OneSignal.logout()
+        .then(() => resolve())
+        .catch(error => reject(error));
+    });
+  });
+}
+function oneSignalUpdateUserJwt(externalId: string, token: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (isOneSignalScriptFailed) {
+      reject(new Error('OneSignal script failed to load.'));
+      return;
+    }
+
+    window.OneSignalDeferred?.push((OneSignal) => {
+      OneSignal.updateUserJwt(externalId, token)
         .then(() => resolve())
         .catch(error => reject(error));
     });
@@ -874,14 +897,14 @@ async function userGetTags(): { [key: string]: string } {
   });
   return retVal;
 }
-function userAddEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void {
+function userAddEventListener<K extends UserEventName>(event: K, listener: (obj: UserEventTypeMap[K]) => void): void {
   
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.addEventListener(event, listener);
   });
   
 }
-function userRemoveEventListener(event: 'change', listener: (change: UserChangeEvent) => void): void {
+function userRemoveEventListener<K extends UserEventName>(event: K, listener: (obj: UserEventTypeMap[K]) => void): void {
   
   window.OneSignalDeferred?.push((OneSignal) => {
     OneSignal.User.removeEventListener(event, listener);
@@ -1026,6 +1049,7 @@ const NotificationsNamespace: IOneSignalNotifications = {
 const OneSignalNamespace: IOneSignalOneSignal = {
 	login: oneSignalLogin,
 	logout: oneSignalLogout,
+	updateUserJwt: oneSignalUpdateUserJwt,
 	init,
 	setConsentGiven: oneSignalSetConsentGiven,
 	setConsentRequired: oneSignalSetConsentRequired,
